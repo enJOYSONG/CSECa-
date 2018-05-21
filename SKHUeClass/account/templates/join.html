@@ -1,0 +1,111 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>회원가입</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
+
+    <!-- Stylesheet
+    ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/responsive.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/back.css' %}">
+</head>
+
+<body>
+    <div id="backdrop">
+
+    </div>
+
+<div class="vertical-center">
+
+    <div class="container" style="max-width:1080px; padding:10%;">
+        <!--form 태그로 묶어줘야 함-->
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Join</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label>ID</label>
+                    <input class="form-control" placeholder="학번 또는 교번으로 입력해주세요" /></br>
+                </div>
+
+                <div class="form-group">
+                    <label>패스워드</label>
+                    <div class="input-group">
+                            <input class="form-control" type="password" placeholder="학사정보시스템 비밀번호를 입력 후 인증을 완료해주세요"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-success">학사정보시스템 인증</button>
+                            </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>직업</label></br>
+                    <select class="form-control">
+                        <option>학생</option>
+                        <option>교수</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>이름</label></br>
+                    <input class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>학과 및 학부</label></br>
+                    <select class="form-control" >
+                        <option>컴퓨터공학과</option>
+                        <option>글로컬IT학과</option>
+                        <option>소프트웨어공학과</option>
+                        <option>정보통신공학과</option>
+                        <option>IT융합자율학부</option>
+                        <option>기타</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>학년</label></br>
+                    <select class="form-control" >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>연락처</label></br>
+                    <input class="form-control" placeholder="'-'을 빼고 입력해주세요"/>
+                </div>
+                <div class="form-group">
+                    <label>이메일</label></br>
+                    <input class="form-control" placeholder="example@office.skhu.ac.kr"/>
+                </div>
+            </div>
+
+
+            <div class="panel-footer">
+                <!--확인 및 취소-->
+                <a href="{% url 'login' %}"><button class="btn btn-primary pull-right">확인</button></a>
+                <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

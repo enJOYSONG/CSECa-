@@ -1,0 +1,259 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="utf-8">
+    <title>그래픽스게임캡스톤디자인</title>
+    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
+
+    <!-- Stylesheet
+    ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/responsive.css' %}">
+
+
+    <script type="text/javascript" src="{% static '/js_main/modernizr.custom.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-header">
+                <a class="navbar-brand">SKHUeClass</a>
+            </div>
+            <div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{% url 'lecture_list' %}">첫화면</a>
+                        </li>
+
+                        <li class="dropdown active">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="active">
+                                    <a href="{% url 'lecture_detail' %}">그래픽스게임캡스톤디자인</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'lecture_detail' %}">컴퓨터구조</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'mypage' %}">마이페이지</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>그래픽스게임캡스톤디자인</h4>
+
+    </div>
+        <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
+
+            <nav id="menu" data-toggle="offcanvas" data-target=".navmenu">
+                <span class="fa fa-bars"></span>
+            </nav>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#first" >강의자료</a></li>
+                <li><a href="#second" >QnA</a></li>
+                <li><a href="#third" >조편성</a></li>
+                <li><a href="#fourth" >관리자</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- 첫번째 탭 -->
+                <div class="tab-pane fade active in" id="first">
+                </br>
+                <table class="table" >
+                    <!--강의자료들~-->
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>제출</th>
+                            <th>제출여부</th>
+                            <th>성적</th>
+                            <th>코멘트</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="noticeView.html">개강주 수업은 없습니다.</a></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="float:right">
+                    <a href="noticeWrite.html"><button class="btn btn-primary">작성</button></a>
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="second">
+                <br>
+                <!-- 두번째 탭 -->
+                <div class="tab-pane fade active in" id="second">
+                    <table class="table">
+                        <!--질문게시판~-->
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>게시날짜</th>
+                                <th>코멘트</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="questionView.html">학점 평가기준이 어떻게 되나요</a></a></td>
+                                <td>길진혁</td>
+                                <td>2018-04-03</td>
+                                <td>X</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <div style="float:right">
+                        <a href="questionWrite.html"><button class="btn btn-primary">작성</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="third">
+                <br>
+                <!-- 세번째 탭 -->
+                <div class="tab-pane fade active in" id="third">
+                    <div>
+                        <div class="col-xs-12 col-sm-4 col-lg-3">
+                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
+
+                                <div class="panel-heading">
+                                    길진혁조
+                                    <button class="btn btn-default btn-xs pull-right" onclick="enterTeam();">
+                                        <span class="glyphicon glyphicon-log-in"></span>
+                                    </button>
+                                </div>
+                                <div class="panel-body">
+                                    저찌구<br />
+                                    어ㅉ구
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-lg-3">
+                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
+
+                                <div class="panel-heading">
+                                    김진솔조
+                                    <button class="btn btn-default btn-xs pull-right">
+                                        <span class="glyphicon glyphicon-log-in"></span>
+                                    </button>
+                                </div>
+                                <div class="panel-body">
+                                    저찌구<br />
+                                    어ㅉ구
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-lg-3">
+                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
+
+                                <div class="panel-heading">
+                                    송승희조
+                                    <button class="btn btn-default btn-xs pull-right">
+                                        <span class="glyphicon glyphicon-log-in"></span>
+                                    </button>
+                                </div>
+                                <div class="panel-body">
+                                    저찌구<br />
+                                    어ㅉ구
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-lg-3">
+                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
+                                <div class="panel-body">
+                                    <button class="btn btn-default" style="width:100%; height:100%; border:0; outline: 0; background-color:rgba(255,255,255,0);">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="fourth">
+                <br>
+                <!-- 네번째 탭 -->
+                <div class="tab-pane fade active in" id="fourth">
+                    <a href="studentList.html">학생 리스트 보기</a></br>
+                    <a href="lectureList.html">시험 성적 공지</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static '/js_main/jquery.1.11.1.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="{% static '/js_main/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js_main/SmoothScroll.js' %}"></script>
+    <script type="text/javascript" src="{% static '/js_main/jasny-bootstrap.min.js' %}"></script>
+
+    <script src="{% static '/js_main/owl.carousel.js' %}"></script>
+    <script src="{% static '/js_main/typed.js' %}"></script>
+
+<script>
+// 관리자 페이지 Tab 바뀌는 JS
+$(function () {
+    $('ul.nav-tabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+});
+</script>
+
+<script type="text/javascript">
+// 팀합류 확인창
+    function enterTeam(){
+        if(confirm("OOO팀에 들어가시겠습니까?")==true){
+            //확인
+        }
+        else{
+            return; // 취소
+        }
+    }
+</script>
+
+<!-- Javascripts ================================================== -->
+<script type="text/javascript" src="{% static 'js_main/main.js' %}"></script>
+</body>
+</html>

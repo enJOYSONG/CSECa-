@@ -1,0 +1,166 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>강의신청</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
+
+    <!-- Stylesheet
+    ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css_main/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css_main/responsive.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css_main/pagination.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">SKHUeClass</a>
+            </div>
+            <div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="lectureList.html">첫화면</a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="myLecture.html">그래픽스게임캡스톤디자인</a>
+                                </li>
+                                <li>
+                                    <a href="myLecture.html">컴퓨터구조</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="myPage.html">마이페이지</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+
+
+    <!----바디바디--->
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>강의목록</h4>
+
+    </div>
+    <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
+        <table class="table table-hover">
+
+            <thead>
+                <tr>
+                    <th class="text-center"style="width:100px">이수구분</th>
+                    <th class ="text-center"style="width:400px">강좌명</th>
+                    <th class ="text-center"style="width:250px">담당교수</th>
+                    <th class ="text-center"style="width:200px">강의시간</th>
+                    <th class ="text-center"style="width:50px">신청</th>
+                </tr>
+            </thead>
+
+            <tbody class="text-center">
+
+                <tr>
+                    <td>전공필수</td>
+                    <td>그래픽스게임캡스톤디자인</td>
+                    <td>강호철</td>
+                    <td>화 12-3 수 6-9</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>전공선택</td>
+                    <td>3D그래픽스입문</td>
+                    <td>뿜뿜파오</td>
+                    <td>월 12-3</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>전공필수</td>
+                    <td>자바프로그래밍</td>
+                    <td>노은하</td>
+                    <td>화 4:30-5:45 목 3-4:15</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>교양선택</td>
+                    <td>비극의이해</td>
+                    <td>그라제</td>
+                    <td>수 12-3</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>교양선택</td>
+                    <td>놀고먹는방법</td>
+                    <td>행복전도사</td>
+                    <td>금 3-6</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>교양선택</td>
+                    <td>식품미생물학실험</td>
+                    <td>스트롱타이거아이언</td>
+                    <td>월 10:30-11:45 수 9:00-10:15</td>
+                    <td>
+                        <label>
+                            <input type="checkbox" value="">
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<div style="width:100%; margin:0 auto;">
+
+        <ul class="pagination" >
+            <li class="active"><a herf="#">1</a></li>
+            <li><a herf="#">2</a></li>
+            <li><a herf="#">3</a></li>
+            <li><a herf="#">4</a></li>
+            <li><a herf="#">5</a></li>
+        </ul>
+    </div>
+        <button type="submit" class="btn btn-primary pull-right">신청</button>
+
+    </div>

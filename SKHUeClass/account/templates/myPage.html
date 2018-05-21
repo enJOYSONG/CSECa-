@@ -1,0 +1,161 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="utf-8">
+    <title>그래픽스게임캡스톤디자인</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
+
+    <!-- Stylesheet
+    ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css_main/responsive.css' %}">
+
+
+    <script type="text/javascript" src="{% static '/js_main/modernizr.custom.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">SKHUeClass</a>
+            </div>
+            <div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{% url 'lecture_list' %}">첫화면</a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li >
+                                    <a href="{% url 'lecture_detail' %}">그래픽스게임캡스톤디자인</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'lecture_detail' %}">컴퓨터구조</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                        <li class="active">
+                            <a href="{% url 'mypage' %}">마이페이지</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>내 강의실</h4>
+
+    </div>
+    <div class="container" style="background-color:rgba(255,255,255,0.6); margin:0 auto; padding:5%; width: 90%; max-width: 1000px; border-radius:10px;">
+
+    <div style="width:80%; margin:0 auto;">
+
+        <div class="form-group">
+            <label>ID</label>
+            <input class="form-control" placeholder="201535006" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>패스워드</label>
+            <input class="form-control" type="password" />
+
+        </div>
+        <div class="form-group">
+            <label>패스워드 확인</label>
+            <input class="form-control" type="password"/>
+        </div>
+
+        <div class="form-group">
+            <label>직업</label>
+            <select class="form-control" disabled>
+                <option>학생</option>
+                <option>교수</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>이름</label>
+            <input class="form-control" placeholder="길진혁" disabled/>
+        </div>
+
+        <div class="form-group">
+            <label>학과 및 학부</label>
+            <select class="form-control" >
+                <option>컴퓨터공학과</option>
+                <option>글로컬IT학과</option>
+                <option>소프트웨어공학과</option>
+                <option>정보통신공학과</option>
+                <option>IT융합자율학부</option>
+                <option>기타</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>학년</label>
+            <select class="form-control" >
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>연락처</label>
+            <input class="form-control" placeholder="'-'을 빼고 입력해주세요"/>
+        </div>
+        <div class="form-group">
+            <label>이메일</label>
+            <input class="form-control" placeholder="example@office.skhu.ac.kr"/>
+        </div>
+        <br />
+
+            <!--확인 및 취소-->
+            <a href="login.html"><button class="btn btn-primary pull-right">확인</button></a>
+            <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
+
+       </div>
+    </div>
+
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/js_main/jquery.1.11.1.js' %}"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script type="text/javascript" src="{% static '/js_main/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static '/js_main/SmoothScroll.js' %}"></script>
+<script type="text/javascript" src="{% static '/js_main/jasny-bootstrap.min.js' %}"></script>
+
+<script src="{% static '/js_main/owl.carousel.js' %}"></script>
+<script src="{% static '/js_main/typed.js' %}"></script>
+<!-- Javascripts ================================================== -->
+<script type="text/javascript" src="{% static '/js_main/main.js' %}"></script>
+</div>
+
+
+
+
+
+</body>
+</html>
