@@ -11,6 +11,11 @@ def login(request):
     if request.method == "GET":
         return render(request, 'login.html')
     if request.method == "POST":
+
+
+
+
+
         return redirect('/lecture/lecture_list')
 
 @csrf_protect
