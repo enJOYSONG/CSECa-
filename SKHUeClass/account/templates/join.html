@@ -21,6 +21,8 @@
 
     </div>
 
+    <form method="post">
+        {% csrf_token %}
 <div class="vertical-center">
 
     <div class="container" style="max-width:1080px; padding:10%;">
@@ -95,7 +97,7 @@
 
             <div class="panel-footer">
                 <!--확인 및 취소-->
-                <a href="{% url 'login' %}"><button class="btn btn-primary pull-right">확인</button></a>
+                <button type="submit" class="btn btn-primary pull-right" formaction="/join">확인</button>
                 <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
                 <div class="clearfix"></div>
             </div>
@@ -104,7 +106,7 @@
     </div>
 </div>
 
-
+</form>
 
 
 </body>
