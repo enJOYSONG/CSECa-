@@ -63,6 +63,9 @@
 
 
 
+    <form method="post">
+        {% csrf_token %}
+
     <!----바디바디--->
     <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
         <h4>강의목록</h4>
@@ -82,73 +85,17 @@
             </thead>
 
             <tbody class="text-center">
-
-                <tr>
-                    <td>전공필수</td>
-                    <td>그래픽스게임캡스톤디자인</td>
-                    <td>강호철</td>
-                    <td>화 12-3 수 6-9</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>전공선택</td>
-                    <td>3D그래픽스입문</td>
-                    <td>뿜뿜파오</td>
-                    <td>월 12-3</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>전공필수</td>
-                    <td>자바프로그래밍</td>
-                    <td>노은하</td>
-                    <td>화 4:30-5:45 목 3-4:15</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>교양선택</td>
-                    <td>비극의이해</td>
-                    <td>그라제</td>
-                    <td>수 12-3</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>교양선택</td>
-                    <td>놀고먹는방법</td>
-                    <td>행복전도사</td>
-                    <td>금 3-6</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>교양선택</td>
-                    <td>식품미생물학실험</td>
-                    <td>스트롱타이거아이언</td>
-                    <td>월 10:30-11:45 수 9:00-10:15</td>
-                    <td>
-                        <label>
-                            <input type="checkbox" value="">
-                        </label>
-                    </td>
-                </tr>
+                {% for lecture in lectures %}
+                    <tr>
+                        <td>전공필수</td>
+                        <td>{{ lecture.name }}</td>
+                        <td>{{ lecture.professor }}</td>
+                        <td>화 12-3 수 6-9</td>
+                        <td>
+                           <button type="submit" class="btn btn-primary pull-right" formaction="/my_lecture_list">신청</button>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 <div style="width:100%; margin:0 auto;">
@@ -161,6 +108,7 @@
             <li><a herf="#">5</a></li>
         </ul>
     </div>
-        <button type="submit" class="btn btn-primary pull-right">신청</button>
+
 
     </div>
+    </form>

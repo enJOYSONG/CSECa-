@@ -36,7 +36,7 @@
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="{% url 'lecture_list' %}">첫화면</a>
+                            <a href="{% url 'my_lecture_list' %}">첫화면</a>
                         </li>
 
                         <li class="dropdown">
@@ -72,7 +72,8 @@
     <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
 
 
-            <a href="lectureApply.html" class="pull-right" style="margin-left:10px">강의신청</a>
+            <!--<a href="lectureApply.html" class="pull-right" style="margin-left:10px">강의신청</a>-->
+            <a href="{% url 'lecture_list' %}" class="pull-right" style="margin-left:10px">강의신청</a>
             <a href="lectureMaking.html" class="pull-right" >강의추가</a>
 
             <table class="table table-hover">
