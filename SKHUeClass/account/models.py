@@ -19,7 +19,7 @@ class BaseUser(models.Model):
     password = models.CharField(max_length=100)
     name = models.CharField(max_length=20, default="이름없음")
     department = models.CharField(max_length=3, choices=DEPARTMENT_CHOICES, default='etc')
-    phone = models.CharField(max_length=15, null=True, default=timezone.now)
+    phone = models.CharField(max_length=15, null=True)
 
 class Professor(models.Model):
     base_user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
