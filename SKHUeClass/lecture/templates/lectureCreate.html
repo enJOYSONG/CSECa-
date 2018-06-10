@@ -59,64 +59,36 @@
     </nav>
 
 
-
-
-
-
-    <form method="post">
+<form method="post">
         {% csrf_token %}
+    <div class="container" >
 
-    <!----바디바디--->
-    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
-        <h4>강의목록</h4>
+        <div  style="background-color: rgba(255,255,255,0.3); margin: 100px auto; width: 100%; padding:5%; border-radius:10px;">
+            <h3>강의 추가</h3><br />
+            <label>강의 이름</label>
+            <input id="lecture_name" name ="lecture_name" class="form-control"/></br>
 
+        </br>
+        <button class="btn btn-primary pull-right" type="submit" formaction="/lecture/">추가</button>
+        <button class="btn btn-default pull-right" style="margin-right:5px" formaction="/lecture/my_lecture_list" formmethod="get">취소</button>
+        <br />
     </div>
-    <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
-        <table class="table table-hover">
-
-            <thead>
-                <tr>
-                    <th class="text-center"style="width:100px">이수구분</th>
-                    <th class ="text-center"style="width:400px">강좌명</th>
-                    <th class ="text-center"style="width:250px">담당교수</th>
-                    <th class ="text-center"style="width:200px">강의시간</th>
-                    <th class ="text-center"style="width:50px">신청</th>
-                </tr>
-            </thead>
-
-            <tbody class="text-center">
-                <input type="hidden" id="h1" name="h1">
-                {% for lecture in lectures %}
-                    <tr>
-                        <td>전공필수</td>
-                        <td>{{ lecture.name }}</td>
-                        <td>{{ lecture.professor.base_user.get_full_name }}</td>
-                        <td>화 12-3 수 6-9</td>
-                        <td>
-                           <button type="submit" class="btn btn-primary pull-right" formaction="/lecture/my_lecture_list" value="{{ lecture.id }}" onclick="addLecture({{ lecture.id }})">신청</button>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-<div style="width:100%; margin:0 auto;">
-
-        <ul class="pagination" >
-            <li class="active"><a herf="#">1</a></li>
-            <li><a herf="#">2</a></li>
-            <li><a herf="#">3</a></li>
-            <li><a herf="#">4</a></li>
-            <li><a herf="#">5</a></li>
-        </ul>
-    </div>
+</div>
+</form>
 
 
-    </div>
-    </form>
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+            <script type="text/javascript" src="{% static '/js_main/jquery.1.11.1.js' %}"></script>
+            <!-- Include all compiled plugins (below), or include individual files as needed -->
+            <script type="text/javascript" src="{% static '/js_main/bootstrap.js' %}"></script>
+            <script type="text/javascript" src="{% static '/js_main/SmoothScroll.js' %}"></script>
+            <script type="text/javascript" src="{% static '/js_main/jasny-bootstrap.min.js' %}"></script>
 
-<script type="text/javascript">
-    function addLecture(param){
-        document.getElementById("h1").value = param
-    }
+            <script src="{% static '/js_main/owl.carousel.js' %}"></script>
+            <script src="{% static '/js_main/typed.js' %}"></script>
 
-</script>
+<!-- Javascripts ================================================== -->
+<script type="text/javascript" src="{% static 'js_main/main.js' %}"></script>
+</body>
+</html>

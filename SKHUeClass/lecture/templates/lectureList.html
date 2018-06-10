@@ -74,7 +74,7 @@
 
             <!--<a href="lectureApply.html" class="pull-right" style="margin-left:10px">강의신청</a>-->
             <a href="{% url 'lecture_list' %}" class="pull-right" style="margin-left:10px">강의신청</a>
-            <a href="lectureMaking.html" class="pull-right" >강의추가</a>
+            <a href="{% url 'main' %}" class="pull-right" >강의추가</a>
 
             <table class="table table-hover">
 
@@ -86,24 +86,15 @@
                 </thead>
 
                 <tbody>
+                    {% for lecture in lectures %}
                     <tr>
-                        <td>강호철</td>
+                        <td>{{ lecture.professor.base_user.get_full_name }}</td>
                         <td>
-                            <a href="{% url 'lecture_detail' %}">그래픽스게임캡스톤디자인</a>
+                            <a href="{% url 'lecture_detail' %}">{{ lecture.name}}</a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>김학수</td>
-                        <td>
-                            <a href="{% url 'lecture_detail' %}">컴퓨터구조</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>노은하</td>
-                        <td>
-                            <a herf="{% url 'lecture_detail' %}">자바프로그래밍</a>
-                        </td>
-                    </tr>
+
+                    {% endfor %}
                 </tbody>
             </table>
             </div>

@@ -23,6 +23,7 @@
 
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
+
         <div class="container-fluid">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                 <span class="icon-bar"></span>
@@ -66,28 +67,30 @@
         <h4>내 강의실</h4>
 
     </div>
+    <form method='POST'>
+        {% csrf_token %}
     <div class="container" style="background-color:rgba(255,255,255,0.6); margin:0 auto; padding:5%; width: 90%; max-width: 1000px; border-radius:10px;">
 
     <div style="width:80%; margin:0 auto;">
 
         <div class="form-group">
             <label>ID</label>
-            <input class="form-control" placeholder="201535006" disabled/>
+            <input class="form-control" placeholder="{{ info.username }}" disabled/>
         </div>
 
         <div class="form-group">
             <label>패스워드</label>
-            <input class="form-control" type="password" />
+            <input id="password" name="password" class="form-control" type="password" />
 
         </div>
         <div class="form-group">
             <label>패스워드 확인</label>
-            <input class="form-control" type="password"/>
+            <input id="password_check" name="password_check" class="form-control" type="password"/>
         </div>
 
         <div class="form-group">
             <label>직업</label>
-            <select class="form-control" disabled>
+            <select id="job" name="job" class="form-control" disabled>
                 <option>학생</option>
                 <option>교수</option>
             </select>
@@ -95,48 +98,102 @@
 
         <div class="form-group">
             <label>이름</label>
-            <input class="form-control" placeholder="길진혁" disabled/>
+            <input class="form-control" placeholder="{{ info.name }}" disabled/>
         </div>
 
         <div class="form-group">
             <label>학과 및 학부</label>
-            <select class="form-control" >
-                <option>컴퓨터공학과</option>
-                <option>글로컬IT학과</option>
-                <option>소프트웨어공학과</option>
-                <option>정보통신공학과</option>
-                <option>IT융합자율학부</option>
-                <option>기타</option>
+            <select id="department" name="department" class="form-control">
+                {% if info.department == "CS"%}
+                    <option value="CS" selected="selected">컴퓨터공학과</option>
+                    <option value="GL">글로컬IT학과</option>
+                    <option value="SW">소프트웨어공학과</option>
+                    <option value="JT">정보통신공학과</option>
+                    <option value="IT">IT융합자율학부</option>
+                    <option value="etc">기타</option>
+                {% elif info.department == "GL"%}
+                    <option value="CS">컴퓨터공학과</option>
+                    <option value="GL" selected="selected">글로컬IT학과</option>
+                    <option value="SW">소프트웨어공학과</option>
+                    <option value="JT">정보통신공학과</option>
+                    <option value="IT">IT융합자율학부</option>
+                    <option value="etc">기타</option>
+                {% elif info.department == "SW"%}
+                    <option value="CS">컴퓨터공학과</option>
+                    <option value="GL">글로컬IT학과</option>
+                    <option value="SW" selected="selected">소프트웨어공학과</option>
+                    <option value="JT">정보통신공학과</option>
+                    <option value="IT">IT융합자율학부</option>
+                    <option value="etc">기타</option>
+                {% elif info.department == "JT"%}
+                    <option value="CS">컴퓨터공학과</option>
+                    <option value="GL">글로컬IT학과</option>
+                    <option value="SW">소프트웨어공학과</option>
+                    <option value="JT" selected="selected">정보통신공학과</option>
+                    <option value="IT">IT융합자율학부</option>
+                    <option value="etc">기타</option>
+                {% elif info.department == "IT"%}
+                    <option value="CS">컴퓨터공학과</option>
+                    <option value="GL">글로컬IT학과</option>
+                    <option value="SW">소프트웨어공학과</option>
+                    <option value="JT">정보통신공학과</option>
+                    <option value="IT" selected="selected">IT융합자율학부</option>
+                    <option value="etc">기타</option>
+                 {% elif info.department == "etc"%}
+                    <option value="CS">컴퓨터공학과</option>
+                    <option value="GL">글로컬IT학과</option>
+                    <option value="SW">소프트웨어공학과</option>
+                    <option value="JT">정보통신공학과</option>
+                    <option value="IT">IT융합자율학부</option>
+                    <option value="etc" selected="selected">기타</option>
+                {% endif %}
             </select>
         </div>
 
         <div class="form-group">
             <label>학년</label>
-            <select class="form-control" >
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
+            <select class="form-control" id="grade" name="grade" >
+                {% if info.grade == 1%}
+                    <option value=1 selected="selected">1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                {% elif info.grade == 2%}
+                    <option value=1>1</option>
+                    <option value=2 selected="selected">2</option>
+                    <option value=3>3</option>
+                    <option value=4>4</option>
+                {% elif info.grade == 3%}
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3 selected="selected">3</option>
+                    <option value=4>4</option>
+                 {% elif info.grade == 4%}
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                    <option value=4 selected="selected">4</option>
+                {% endif %}
             </select>
         </div>
 
         <div class="form-group">
             <label>연락처</label>
-            <input class="form-control" placeholder="'-'을 빼고 입력해주세요"/>
+            <input id="phone" name="phone" class="form-control"value="{{ info.phonenum }}"/>
         </div>
         <div class="form-group">
             <label>이메일</label>
-            <input class="form-control" placeholder="example@office.skhu.ac.kr"/>
+            <input id="email" name="email" class="form-control"value="{{ info.email }}"/>
         </div>
         <br />
 
             <!--확인 및 취소-->
-            <a href="login.html"><button class="btn btn-primary pull-right">확인</button></a>
-            <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
+            <button type="submit" class="btn btn-primary pull-right" formaction="/account/mypage">확인</button>
+            <button type="submit" class="btn btn-secondary pull-right" style="margin-right:5px" formaction="/lecture/my_lecture_list" formmethod="get">취소</button>
 
        </div>
     </div>
-
+    </form>>
 
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

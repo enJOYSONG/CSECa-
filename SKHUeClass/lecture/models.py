@@ -5,3 +5,4 @@ from account.models import Professor, Student
 class Lecture(models.Model):
     name = models.CharField(max_length=100)
     professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, null=True)
+    students = models.ManyToManyField(Student)
