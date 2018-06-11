@@ -1,70 +1,6 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends "templates/navbar.html" %}
 
-
-    <meta charset="utf-8">
-    <title>그래픽스게임캡스톤디자인</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
-
-    <!-- Stylesheet
-    ================================================== -->
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/responsive.css' %}">
-
-
-    <script type="text/javascript" src="{% static '/js_main/modernizr.custom.js' %}"></script>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-</head>
-
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">SKHUeClass</a>
-            </div>
-            <div>
-                <div class="collapse navbar-collapse" id="myNavbar">
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="{% url 'my_lecture_list' %}">첫화면</a>
-                        </li>
-
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="{% url 'lecture_detail' %}">그래픽스게임캡스톤디자인</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'lecture_detail' %}">컴퓨터구조</a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'mypage' %}">마이페이지</a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-
-
-
+    {% block content %}
     <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
         <h4>내 강의실</h4>
 
@@ -99,23 +35,7 @@
             </table>
             </div>
 
+    {% endblock %}
 
 
 
-
-
-            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script type="text/javascript" src="{% static '/js_main/jquery.1.11.1.js' %}"></script>
-            <!-- Include all compiled plugins (below), or include individual files as needed -->
-            <script type="text/javascript" src="{% static '/js_main/bootstrap.js' %}"></script>
-            <script type="text/javascript" src="{% static '/js_main/SmoothScroll.js' %}"></script>
-            <script type="text/javascript" src="{% static '/js_main/jasny-bootstrap.min.js' %}"></script>
-
-            <script src="{% static '/js_main/owl.carousel.js' %}"></script>
-            <script src="{% static '/js_main/typed.js' %}"></script>
-
-
-
-        </body>
-        </html>
