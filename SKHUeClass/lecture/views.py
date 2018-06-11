@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect
-from .models import Lecture
+from .models import Lecture, LectureNotice
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 @login_required
 def main(request):
@@ -53,7 +54,8 @@ def my_lecture_list(request):
 @login_required
 def lecture_detail(request):
     if request.method == "GET":
-        return render(request, 'myLecture.html')
+        notices = LectureNotice.objects.all()
+        return render(request, 'myLecture.html', {'notices': notices})
 
 @login_required
 def lecture_list(request):
@@ -63,7 +65,8 @@ def lecture_list(request):
 
 def noticeWrite(request):
     if request.method =="GET":
-        return render(request,'noticeWrite.html')
+        return render(request, 'noticeWrite.html')
+
     if request.method=='POST':
         lec = Lecture.objects.get(id=1)
         lecNotice = LectureNotice()
@@ -79,4 +82,4 @@ def noticeWrite(request):
 
 
         lecNotice.save()
-        return render(request,'myLecture.html')
+        return redirect('lecture_detail')

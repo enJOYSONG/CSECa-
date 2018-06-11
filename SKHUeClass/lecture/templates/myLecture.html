@@ -94,14 +94,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {%  for notice in notices %}
                         <tr>
-                            <td>1</td>
-                            <td><a href="noticeView.html">개강주 수업은 없습니다.</a></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                                <td>{{  notice.id }}</td>
+                                <td><a href="noticeView.html">{{  notice.title }}</a></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                         </tr>
+                    {%  endfor %}
                     </tbody>
                 </table>
 
