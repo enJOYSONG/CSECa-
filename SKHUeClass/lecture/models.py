@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import Professor, Student
+from django.utils import timezone
 
 # Create your models here.
 class Lecture(models.Model):
