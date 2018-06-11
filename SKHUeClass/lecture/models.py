@@ -7,6 +7,7 @@ class Lecture(models.Model):
     name = models.CharField(max_length=100)
     professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, null=True)
     students = models.ManyToManyField(Student)
+    ta = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name="ta_student")
 
 class LectureNotice(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)

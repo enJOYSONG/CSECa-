@@ -24,6 +24,5 @@ class Professor(models.Model):
 class Student(models.Model):
     base_user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, null=False)
     grade = models.IntegerField(default=1)
-    isTA = models.BooleanField(default=False)
 
 
