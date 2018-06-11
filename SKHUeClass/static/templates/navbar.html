@@ -44,13 +44,11 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
                             <ul class="dropdown-menu">
+                                {% for lecture in lectures %}
                                 <li>
-                                    <a href="{% url 'lecture_detail' %}">그래픽스게임캡스톤디자인</a>
+                                    <a href="{% url 'lecture_detail' %}">{{ lecture.name }}</a>
                                 </li>
-                                <li>
-                                    <a href="{% url 'lecture_detail' %}">컴퓨터구조</a>
-                                </li>
-
+                                {% endfor %}
                             </ul>
                         </li>
 
@@ -58,6 +56,14 @@
                             <a href="{% url 'mypage' %}">마이페이지</a>
                         </li>
 
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="{% url 'mypage' %}"><span class="glyphicon glyphicon-user">{{ request.user }}</span></a>
+                        </li>
+                        <li>
+                            <a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out" ></span></a>
+                        </li>
                     </ul>
                 </div>
             </div>

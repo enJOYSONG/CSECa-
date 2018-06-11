@@ -92,3 +92,9 @@ def userinfo(request):
             request.user.set_password(request.POST['password'])
             request.user.save()
             return redirect('/login')
+
+
+@login_required
+def logoutUser(request):
+    auth.logout(request)
+    return redirect('login')
