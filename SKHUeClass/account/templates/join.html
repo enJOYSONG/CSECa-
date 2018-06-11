@@ -36,13 +36,13 @@
 
                 <div class="form-group">
                     <label>ID</label>
-                    <input class="form-control" placeholder="학번 또는 교번으로 입력해주세요" /></br>
+                    <input id="id" name="id" class="form-control" placeholder="학번 또는 교번으로 입력해주세요" /></br>
                 </div>
 
                 <div class="form-group">
                     <label>패스워드</label>
                     <div class="input-group">
-                            <input class="form-control" type="password" placeholder="학사정보시스템 비밀번호를 입력 후 인증을 완료해주세요"/>
+                            <input id="password" name="password" class="form-control" type="password" placeholder="학사정보시스템 비밀번호를 입력 후 인증을 완료해주세요"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-success">학사정보시스템 인증</button>
                             </span>
@@ -51,32 +51,34 @@
 
                 <div class="form-group">
                     <label>직업</label></br>
-                    <select class="form-control">
+                    <select id="job" name="job" class="form-control">
                         <option>학생</option>
                         <option>교수</option>
                     </select>
                 </div>
 
                 <div class="form-group">
+                     <label>성</label></br>
+                    <input id="first_name" name="first_name" class="form-control" />
                     <label>이름</label></br>
-                    <input class="form-control" />
+                    <input id="last_name" name="last_name" class="form-control" />
                 </div>
 
                 <div class="form-group">
                     <label>학과 및 학부</label></br>
-                    <select class="form-control" >
-                        <option>컴퓨터공학과</option>
-                        <option>글로컬IT학과</option>
-                        <option>소프트웨어공학과</option>
-                        <option>정보통신공학과</option>
-                        <option>IT융합자율학부</option>
-                        <option>기타</option>
+                    <select id="department" name="department" class="form-control" >
+                        <option value="CS">컴퓨터공학과</option>
+                        <option value="GL">글로컬IT학과</option>
+                        <option value="SW">소프트웨어공학과</option>
+                        <option value="JT">정보통신공학과</option>
+                        <option value="IT">IT융합자율학부</option>
+                        <option value="etc">기타</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>학년</label></br>
-                    <select class="form-control" >
+                    <select id="grade" name="grade" class="form-control" >
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -86,11 +88,11 @@
 
                 <div class="form-group">
                     <label>연락처</label></br>
-                    <input class="form-control" placeholder="'-'을 빼고 입력해주세요"/>
+                    <input id="phone" name="phone" class="form-control" placeholder="'-'을 빼고 입력해주세요"/>
                 </div>
                 <div class="form-group">
                     <label>이메일</label></br>
-                    <input class="form-control" placeholder="example@office.skhu.ac.kr"/>
+                    <input id="email" name="email" class="form-control" placeholder="example@office.skhu.ac.kr"/>
                 </div>
             </div>
 
