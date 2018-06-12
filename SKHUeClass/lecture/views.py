@@ -65,6 +65,7 @@ def lecture_list(request):
             lectures = Lecture.objects.select_related('professor__base_user').all()
             return render(request, 'lectureApply.html', {'lectures': lectures})
 
+@login_required
 def noticeWrite(request, lecture_id):
     if request.method =="GET":
         return render(request, 'noticeWrite.html', {'lecture_id':  lecture_id})
@@ -77,7 +78,8 @@ def noticeWrite(request, lecture_id):
         lecNotice.title= request.POST['title']
         lecNotice.content = request.POST['content']
         lecNotice.file = request.POST['file']
-        lecNotice.is_notice = request.POST.get('is_notice',False)
+        lecNotice.is_notice = request.POST.get('is_notice', False)
+        lecNotice.is_assignment = request.POST.get('is_assignment', False)
         lecNotice.limited_date = request.POST['limited_date']
         #lecNotice.content_at = django.utils.timezone.now()
         lecNotice.updated_at = timezone.now()

@@ -16,7 +16,7 @@
             <label>제출기한</label>
             <input id="limited_date" name="limited_date" class="form-control" type="datetime-local" />
             <input id="is_notice" name="is_notice" type="checkbox" value="1">공지</input></br>
-
+            <input id="is_assignment" name="is_assignment" type="checkbox" value="2">과제</input></br>
 
            </br>
           <button class="btn btn-primary pull-right" type="submit" formaction={% url 'noticeWrite' lecture_id=lecture_id%}>작성</button>

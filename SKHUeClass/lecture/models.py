@@ -18,6 +18,7 @@ class LectureNotice(models.Model):
     file = models.FileField(null=True)
     limited_date=models.DateTimeField(null=True)
     is_notice=models.BooleanField()
+    is_assignment = models.BooleanField(default=False)
 
 class LectureQuestion(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
