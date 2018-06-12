@@ -4,7 +4,7 @@
     {% block content %}
 
     <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
-        <h4>그래픽스게임캡스톤디자인</h4>
+        <h4>{{ lecture.name }}</h4>
 
     </div>
         <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {%  for notice in notices %}
+                    {%  for notice in lecture.lecturenotice_set.all %}
                         <tr>
                                 <td>{{  notice.id }}</td>
                                 <td><a href="noticeView.html">{{  notice.title }}</a></td>
@@ -50,7 +50,7 @@
                 </table>
 
                 <div style="float:right">
-                    <a href="{% url 'noticeWrite' %}"><button class="btn btn-primary">작성</button></a>
+                    <a href="{% url 'noticeWrite' lecture_id=lecture.id%}"><button class="btn btn-primary">작성</button></a>
                 </div>
 
             </div>
@@ -73,7 +73,7 @@
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td><a href="questionView.html">학점 평가기준이 어떻게 되나요</a></a></td>
+                                <td><a href="questionView.html">학점 평가기준이 어떻게 되나요</a></td>
                                 <td>길진혁</td>
                                 <td>2018-04-03</td>
                                 <td>X</td>

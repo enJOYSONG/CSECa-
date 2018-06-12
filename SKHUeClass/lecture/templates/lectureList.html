@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ lecture.professor.base_user.get_full_name }}</td>
                         <td>
-                            <a href="{% url 'lecture_detail' %}">{{ lecture.name}}</a>
+                            <a href="{% url 'lecture_detail' lecture_id=lecture.id %}">{{ lecture.name}}</a>
                         </td>
                     </tr>
 

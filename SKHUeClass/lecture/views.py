@@ -64,12 +64,12 @@ def lecture_list(request):
             lectures = Lecture.objects.select_related('professor__base_user').all()
             return render(request, 'lectureApply.html', {'lectures': lectures})
 
-def noticeWrite(request):
+def noticeWrite(request, lecture_id):
     if request.method =="GET":
-        return render(request, 'noticeWrite.html')
+        return render(request, 'noticeWrite.html', {'lecture_id':  lecture_id})
 
     if request.method=='POST':
-        lec = Lecture.objects.get(id=1)
+        lec = Lecture.objects.get(id=lecture_id)
         lecNotice = LectureNotice()
 
         lecNotice.lecture = lec
@@ -83,4 +83,4 @@ def noticeWrite(request):
 
 
         lecNotice.save()
-        return redirect('lecture_detail')
+        return redirect('lecture_detail', lecture_id)
