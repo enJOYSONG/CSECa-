@@ -9,15 +9,10 @@
     <meta charset="utf-8">
     <title>SKHU eClass</title>
     <!-- Bootstrap -->
-
-
-    <script type="text/javascript" src="{% static '/js_main/modernizr-custom.js' %}"></script>
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
-
 
     <!-- Stylesheet -->
     ================================================== -->
@@ -25,6 +20,8 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css_main/responsive.css' %}">
 
 
+    <script type="text/javascript" src="{% static '/js_main/modernizr.custom.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 
 <body>
@@ -50,7 +47,7 @@
                             <ul class="dropdown-menu">
                                 {% for lecture in lectures %}
                                 <li>
-                                    <a href="{% url 'lecture_detail' lecture_id=lecture.id%}">{{ lecture.name }}</a>
+                                    <a href="{% url 'lecture_detail' %}">{{ lecture.name }}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
