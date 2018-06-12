@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^login$', login, name='login'),
     url(r'^join$', join, name='join'),
     url(r'^mypage$', userinfo, name='mypage'),
+    url(r'^logout$', logoutUser, name='logout'),
 ]

@@ -1,67 +1,6 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Basic Page Needs
-    ================================================== -->
-    <meta charset="utf-8">
-    <title>강의신청</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css"  href="{% static '/css_main/bootstrap.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/jasny-bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static '/css_main/animate.css' %}">
+{% extends "templates/navbar.html" %}
 
-    <!-- Stylesheet
-    ================================================== -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css_main/style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css_main/responsive.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css_main/pagination.css' %}">
-</head>
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">SKHUeClass</a>
-            </div>
-            <div>
-                <div class="collapse navbar-collapse" id="myNavbar">
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="lectureList.html">첫화면</a>
-                        </li>
-
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">강의선택<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="myLecture.html">그래픽스게임캡스톤디자인</a>
-                                </li>
-                                <li>
-                                    <a href="myLecture.html">컴퓨터구조</a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="myPage.html">마이페이지</a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-
-
-
-
+    {% block content %}
 
     <form method="post">
         {% csrf_token %}
@@ -120,3 +59,5 @@
     }
 
 </script>
+
+{% endblock %}
