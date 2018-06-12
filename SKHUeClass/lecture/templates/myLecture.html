@@ -46,7 +46,7 @@
                                     <span class="glyphicon glyphicon-floppy-disk"></span></a>{% endif%}</td>
                                 <td>
                                 {% if notice.is_assignment == 1 %}
-                                    {% for assignment in myAssignment  %}
+                                    {% for assignment in request.user.student.assignment_set.all  %}
                                         {% if assignment.notice == notice %}
                                         Y
                                         {% endif %}
@@ -55,7 +55,7 @@
                                 </td>
                                 <td>
                                     {% if notice.is_assignment == 1 %}
-                                    {% for assignment in myAssignment  %}
+                                    {% for assignment in request.user.student.assignment_set.all  %}
                                         {% if assignment.notice == notice %}
                                             {% if assignment.point is None %}
                                                 점수 미입력
@@ -69,9 +69,11 @@
                                 </td>
                                 <td>
                                     {% if notice.is_assignment == 1 %}
-                                    {% for assignment in myAssignment  %}
+                                    {% for assignment in request.user.student.assignment_set.all  %}
                                         {% if assignment.notice == notice %}
-                                            <a><span class="glyphicon glyphicon-comment" title="{{ assignment.comment }}"></span></a>
+                                            {% if assignment.comment is not None %}
+                                                <a><span class="glyphicon glyphicon-comment" title="{{ assignment.comment }}"></span>
+                                                {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                     {% endif %}

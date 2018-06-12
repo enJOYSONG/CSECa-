@@ -57,9 +57,8 @@ def my_lecture_list(request):
 def lecture_detail(request, lecture_id):
     if request.method == "GET":
         lecture = get_object_or_404(Lecture, id=lecture_id)
-        myAssignment = Assignment.objects.filter(student=request.user.student)
 
-        return render(request, 'myLecture.html', {'lecture': lecture, 'myAssignment': myAssignment})
+        return render(request, 'myLecture.html', {'lecture': lecture})
 
 @login_required
 def lecture_list(request):
@@ -141,16 +140,25 @@ def commentWrite(request, question_id):
 def assignmentSubmit(request, notice_id):
     if request.method == "GET":
         notice = LectureNotice.objects.get(id=notice_id)
-        return render(request, 'assignmentSubmit.html',{'notice': notice})
+        student = Student.objects.get(base_user=request.user)
+        if notice.assignment_set.filter(student=student):
+            assignment = notice.assignment_set.get(student=student)
+            return render(request, 'assignmentSubmit.html', {'notice': notice, 'assignment': assignment})
+        return render(request, 'assignmentSubmit.html', {'notice': notice})
     if request.method == "POST":
         notice = LectureNotice.objects.get(id=notice_id)
         student = Student.objects.get(base_user=request.user)
 
-        assignment = Assignment()
-        assignment.notice = notice
-        assignment.student = student
-        assignment.description = request.POST['description']
-        assignment.file = request.POST['description']
+        if notice.assignment_set.filter(student=student):
+            assignment = notice.assignment_set.get(student=student)
+            assignment.description = request.POST['description']
+            assignment.file = request.POST['file']
+        else:
+            assignment = Assignment()
+            assignment.notice = notice
+            assignment.student = student
+            assignment.description = request.POST['description']
+            assignment.file = request.POST['file']
 
         assignment.save()
         return redirect('lecture_detail', notice.lecture_id)
