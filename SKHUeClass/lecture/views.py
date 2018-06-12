@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from .models import Lecture, LectureNotice
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
@@ -36,6 +36,7 @@ def my_lecture_list(request):
             return render(request, 'lectureList.html', {'lectures': lectures})
 
         lectures = request.user.student.lecture_set.all()
+
         return render(request, 'lectureList.html', {'lectures': lectures})
 
     if request.method == "POST":
@@ -52,10 +53,10 @@ def my_lecture_list(request):
         return redirect('my_lecture_list')
 
 @login_required
-def lecture_detail(request):
+def lecture_detail(request, lecture_id):
     if request.method == "GET":
-        notices = LectureNotice.objects.all()
-        return render(request, 'myLecture.html', {'notices': notices})
+        lecture = get_object_or_404(Lecture, id=lecture_id)
+        return render(request, 'myLecture.html', {'lecture': lecture})
 
 @login_required
 def lecture_list(request):
