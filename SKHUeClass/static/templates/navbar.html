@@ -47,7 +47,7 @@
                             <ul class="dropdown-menu">
                                 {% for lecture in lectures %}
                                 <li>
-                                    <a href="{% url 'lecture_detail' %}">{{ lecture.name }}</a>
+                                    <a href="{% url 'lecture_detail' lecture_id=lecture.id%}">{{ lecture.name }}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
