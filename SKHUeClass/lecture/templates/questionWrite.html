@@ -1,0 +1,28 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+ <form method="post">
+            {% csrf_token %}
+    <div class="container" style="background-color: rgba(255,255,255,0.3); margin-top: 100px; margin-bottom: 50px; padding:5%; border-radius:10px;">
+        <h3>질문 작성</h3><br />
+
+        <div class="form-group">
+        <label>제목</label>
+        <input id="title" name="title" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label>내용</label>
+        <textarea id="content" name="content" rows="15" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>첨부파일</label>
+        <input id="file" name="file" class="btn btn-default" style="width:100%" type="file" />
+    </div>
+
+
+    </br>
+    <button class="btn btn-primary pull-right" type="submit" formaction={% url 'questionWrite' lecture_id=lecture_id %}>작성</button>
+    <button class="btn btn-default pull-right" style="margin-right:5px">취소</button>
+</div>
+ </form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+    <div class="container" style="background-color: rgba(255,255,255,0.3); margin: 100px auto; padding:5%; border-radius:10px;">
+
+    <!-- 제목 내용 날짜 과제날짜 조회수 수정삭제버튼 -->
+    <div style="text-align:center; margin:0 auto; width:100%;">
+        <b>
+            {{ notice.title }}
+        </b>
+    </div>
+    <div style="text-align:right">
+        <br />
+        {{ notice.content_at }}
+    </div>
+    <div style="margin-top:50px">
+        {{ notice.content }}
+    </div>
+    <div style="margin-top:50px">
+        <a href="myLecture.html">< 목록으로</a>
+        <a class="pull-right">삭제</a>
+        <a class="pull-right" style="margin-right:5px">수정</a>
+    </div>
+
+
+    </div>
+
+{% endblock %}

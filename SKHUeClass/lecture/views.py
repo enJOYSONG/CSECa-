@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Lecture, LectureNotice
+from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from account.models import BaseUser
 
 @login_required
 def main(request):
@@ -84,3 +85,50 @@ def noticeWrite(request, lecture_id):
 
         lecNotice.save()
         return redirect('lecture_detail', lecture_id)
+
+@login_required
+def noticeView(request, notice_id):
+    if request.method == "GET":
+        notice = get_object_or_404(LectureNotice, id=notice_id)
+        return render(request, 'noticeView.html', {'notice': notice})
+
+@login_required
+def questionWrite(request, lecture_id):
+    if request.method =="GET":
+        return render(request, 'questionWrite.html', {'lecture_id':  lecture_id})
+
+    if request.method=='POST':
+        lec = Lecture.objects.get(id=lecture_id)
+        user = BaseUser.objects.get(id=request.user.id)
+        lecQuestion = LectureQuestion()
+
+        lecQuestion.lecture = lec
+        lecQuestion.person = user
+        lecQuestion.title = request.POST['title']
+        lecQuestion.content = request.POST['content']
+        lecQuestion.file = request.POST['file']
+
+
+        lecQuestion.save()
+        return redirect('lecture_detail', lecture_id)
+
+@login_required
+def questionView(request, question_id):
+    if request.method == "GET":
+        question = get_object_or_404(LectureQuestion, id=question_id)
+        comments = question.questioncomment_set.all()
+        return render(request, 'questionView.html', {'question': question,'comments': comments})
+
+@login_required
+def commentWrite(request, question_id):
+    if request.method == "POST":
+        question = LectureQuestion.objects.get(id=question_id)
+        user = BaseUser.objects.get(id=request.user.id)
+        comment = QuestionComment()
+
+        comment.question = question
+        comment.person = user
+        comment.comment = request.POST['comment']
+
+        comment.save()
+        return redirect('questionView', question_id)

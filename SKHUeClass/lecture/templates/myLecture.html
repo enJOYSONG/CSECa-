@@ -28,6 +28,7 @@
                     <thead>
                         <tr>
                             <th>번호</th>
+                            <th></th>
                             <th>제목</th>
                             <th>제출</th>
                             <th>제출여부</th>
@@ -39,11 +40,13 @@
                     {%  for notice in lecture.lecturenotice_set.all %}
                         <tr>
                                 <td>{{  notice.id }}</td>
-                                <td><a href="noticeView.html">{{  notice.title }}</a></td>
+                                <td> {% if notice.is_notice == 1 %}<span class="glyphicon glyphicon-bell"></span>{% endif%}</td>
+                                <td><a href="{% url 'noticeView' notice_id=notice.id %}">{{  notice.title }}</a></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                        <!-- <span class="glyphicon glyphicon-floppy-disk"> -->
                         </tr>
                     {%  endfor %}
                     </tbody>
@@ -67,22 +70,22 @@
                                 <th>제목</th>
                                 <th>작성자</th>
                                 <th>게시날짜</th>
-                                <th>코멘트</th>
                             </tr>
                         </thead>
                         <tbody>
+                        {%  for question in lecture.lecturequestion_set.all %}
                             <tr>
-                                <td>1</td>
-                                <td><a href="questionView.html">학점 평가기준이 어떻게 되나요</a></td>
-                                <td>길진혁</td>
-                                <td>2018-04-03</td>
-                                <td>X</td>
+                                <td>{{ question.id }}</td>
+                                <td><a href="{% url 'questionView' question_id=question.id %}">{{ question.title }}</a></td>
+                                <td>{{ question.person.get_full_name }}</td>
+                                <td>{{ question.content_at }}</td>
                             </tr>
+                        {% endfor %}
                         </tbody>
 
                     </table>
                     <div style="float:right">
-                        <a href="questionWrite.html"><button class="btn btn-primary">작성</button></a>
+                        <a href="{% url 'questionWrite' lecture_id=lecture.id %}"><button class="btn btn-primary">작성</button></a>
                     </div>
                 </div>
             </div>
