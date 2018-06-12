@@ -1,0 +1,39 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>과제제출</h4>
+        <h3>- {{ notice.lecture.name }}</h3>
+
+    </div>
+        <form method="post">
+            {% csrf_token %}
+    <div class="container" style="background-color:rgba(255,255,255,0.6); margin:0 auto; padding:5%; width: 90%; max-width: 1000px; border-radius:10px;">
+
+        <div style="width:80%; margin:0 auto;">
+
+            <label>{{ notice.title }}</label>
+            <hr />
+            <div class="form-group">
+
+            <label>부가설명</label>
+            <textarea id="description" name="description" class="form-control" style="max-width:100%;" rows="6"></textarea>
+            </div>
+
+            <label>첨부파일</label>
+            <input id="file" name="file" class="btn btn-default" style="margin-bottom:5px" type="file" />
+
+
+        </div>
+
+            <!--확인 및 취소-->
+            <button class="btn btn-primary pull-right" formaction={% url 'assignmentSubmit' notice_id=notice.id %}>제출</button></a>
+            <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
+
+        </div>
+        </form>
+
+{% endblock %}
+
+

@@ -11,5 +11,10 @@ urlpatterns = [
     url(r'^questionWrite/(?P<lecture_id>[0-9]+)$', questionWrite, name='questionWrite'),
     url(r'^questionView/(?P<question_id>[0-9]+)$', questionView, name='questionView'),
     url(r'^commentWrite/(?P<question_id>[0-9]+)$', commentWrite, name='commentWrite'),
+    url(r'^assignmentSubmit/(?P<notice_id>[0-9]+)$', assignmentSubmit, name='assignmentSubmit'),
+    url(r'^assignmentList/(?P<lecture_id>[0-9]+)$', assignmentList, name='assignmentList'),
+    url(r'^assignmentCheck/(?P<notice_id>[0-9]+)$', assignmentCheck, name='assignmentCheck'),
+    url(r'^assignmentPoint/(?P<assignment_id>[0-9]+)$', assignmentPoint, name='assignmentPoint'),
+
 
 ]

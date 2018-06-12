@@ -1,0 +1,72 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>과제 검사</h4>
+    </div>
+
+    <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
+
+
+        <label style="color:red">201535006 학생과 201435035 학생의 제출파일이 같습니다.</label>
+
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            학번
+                        </th>
+                        <th>
+                            이름
+                        </th>
+                        <th>
+                            파일
+                        </th>
+                        <th style="width:10%">
+                            점수
+                        </th>
+                        <th>
+                            코멘트
+                        </th>
+
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for assignment in assignments %}
+                    <form method="post">
+                        {% csrf_token %}
+                    <tr>
+
+                        <td>
+                            {{ assignment.student.base_user.username }}
+                        </td>
+                        <td>
+                            {{ assignment.student.base_user.get_full_name }}
+                        </td>
+                        <td>
+                            <a href="assignmentSubmit.html"><span class="glyphicon glyphicon-file"></span></a>
+                        </td>
+                        <td>
+                            <input id="point" name="point" class="form-control" style="height:100%" type="number" placeholder="{{ assignment.point }}" value="{{ assignment.point }}"/>
+                        </td>
+                        <td>
+                            <input id="comment" name="comment" class="form-control" style="height:100%" placeholder="{{ assignment.comment }}" value="{{ assignment.comment }}"/>
+                        </td>
+                        <td>
+                            <button class="btn btn-default" formaction="{% url 'assignmentPoint' assignment_id=assignment.id %}">저장</button>
+                        </td>
+                    </tr>
+                    </form>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+{% endblock %}
