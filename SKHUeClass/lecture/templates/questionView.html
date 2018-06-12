@@ -1,0 +1,51 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+
+    <div class="container" style="background-color: rgba(255,255,255,0.3); margin: 100px auto; padding:5%; border-radius:10px;">
+
+    <!-- 제목 내용 날짜 과제날짜 조회수 수정삭제버튼 -->
+    <div style="text-align:center; margin:0 auto; width:100%;">
+        <b>
+            {{ question.title }}
+        </b>
+    </div>
+    <div style="text-align:right">
+        <br />
+        {{ question.content_at }}
+        <br/>
+        {{ question.person.get_full_name }}
+    </div>
+    <div style="margin-top:50px">
+        {{ question.content }}
+    </div>
+    <div style="margin-top:50px">
+        <a href="myLecture.html">< 목록으로</a>
+        <a class="pull-right">삭제</a>
+        <a class="pull-right" style="margin-right:5px">수정</a>
+    </div>
+    <hr />
+
+        {% for comment in comments %}
+
+    <div style="margin-top:20px">
+            {{ comment.person.get_full_name }}
+            {{ comment.content_at }}
+            <br/>
+            {{ comment.comment }}
+            <br/>
+    </div>
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+    <div style="margin-top:30px">
+    <hr />
+        답글 <!--시간 표시-->
+        <textarea id="comment" name="comment" class="form-control" rows="5" style="margin-top:5px" ></textarea>
+        <button class="btn btn-primary pull-right" style="margin-top:5px" formaction={% url 'commentWrite' question_id=question.id %}>작성</button>
+    </div>
+        </form>
+    </div>
+{% endblock %}
