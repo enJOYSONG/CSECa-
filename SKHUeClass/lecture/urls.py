@@ -15,6 +15,6 @@ urlpatterns = [
     url(r'^assignmentList/(?P<lecture_id>[0-9]+)$', assignmentList, name='assignmentList'),
     url(r'^assignmentCheck/(?P<notice_id>[0-9]+)$', assignmentCheck, name='assignmentCheck'),
     url(r'^assignmentPoint/(?P<assignment_id>[0-9]+)$', assignmentPoint, name='assignmentPoint'),
-
+    url(r'^studentList/(?P<lecture_id>[0-9]+)$',studentList, name='studentList'),
 
 ]

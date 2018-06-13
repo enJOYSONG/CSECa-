@@ -186,3 +186,14 @@ def assignmentPoint(request, assignment_id):
 
         assignment.save()
         return redirect('assignmentCheck',assignment.notice_id)
+
+
+@login_required
+def studentList(request, lecture_id):
+    if request.method == "GET":
+        lecture = Lecture.objects.get(id=lecture_id)
+        students = lecture.students.all()
+
+        return render(request, 'studentList.html', {'students': students})
+
+    # if request.method=="POST":
