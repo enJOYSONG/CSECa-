@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'lecture',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +129,8 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = 'account.BaseUser'
 
 LOGIN_URL = '/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 '''
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

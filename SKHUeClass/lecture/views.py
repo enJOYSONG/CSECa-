@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment, LectureInfo
 from django.core.exceptions import ObjectDoesNotExist
@@ -6,27 +6,26 @@ from django.utils import timezone
 from account.models import BaseUser, Student
 from django.db.models import Case, When,Value, CharField,F
 from libraries.libuser import user_check
+from django.conf import settings
+from django.core.files.storage import default_storage
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
 
 @login_required
+@permission_required('lecture.add_lecture', raise_exception=True)
 def main(request):
     if request.method == "GET":
         user = user_check(request)
-
-        if type(user) is Student:
-            return redirect('my_lecture_list')
 
         return render(request, 'lectureCreate.html')
 
     if request.method == "POST":
         user = user_check(request)
 
-        if type(user) is Student:
-            return redirect('my_lecture_list')
-
-
         new_lecture = Lecture(name=request.POST['lecture_name'],
-                              professor=request.user.professor)
+                              professor=user)
         new_lecture.save()
+
         return redirect('lecture_list')
 
 @login_required
@@ -45,14 +44,11 @@ def my_lecture_list(request):
     if request.method == "POST":
         user = user_check(request)
 
-        if type(user) is Student:
-            return redirect('my_lecture_list')
-
         lecture_id = request.POST['h1']
         lecture = Lecture.objects.get(id=lecture_id)
 
-        if LectureInfo.objects.filter(lecture=lecture, student=request.user.student).exists() == False:
-            lecture_info = LectureInfo(lecture=lecture, student=request.user.student)
+        if LectureInfo.objects.filter(lecture=lecture, student=user).exists() == False:
+            lecture_info = LectureInfo(lecture=lecture, student=user)
             lecture_info.save()
 
 
@@ -70,7 +66,7 @@ def lecture_detail(request, lecture_id):
                                                                                then='assignment__point'), default=Value(""),
                                                                           output_field=CharField())
 
-                                                             ).order_by('lecturenotice__id')
+                                                             ).order_by('-id')
 
 
 
@@ -169,19 +165,22 @@ def assignmentSubmit(request, notice_id):
     if request.method == "POST":
         notice = LectureNotice.objects.get(id=notice_id)
         student = Student.objects.get(base_user=request.user)
+        file_url = settings.AWS_CLOUDFRONT_DOMAIN + "/" + request.FILES['file'].name
 
         if notice.assignment_set.filter(student=student):
             assignment = notice.assignment_set.get(student=student)
             assignment.description = request.POST['description']
-            assignment.file = request.POST['file']
+            assignment.file = file_url
         else:
             assignment = Assignment()
             assignment.notice = notice
             assignment.student = student
             assignment.description = request.POST['description']
-            assignment.file = request.POST['file']
+            assignment.file = file_url
 
         assignment.save()
+
+        default_storage.save(request.FILES['file'].name, request.FILES['file'])
         return redirect('lecture_detail', notice.lecture_id)
 
 @login_required

@@ -7,11 +7,11 @@
         <h3>- {{ notice.lecture.name }}</h3>
 
     </div>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data" >
             {% csrf_token %}
     <div class="container" style="background-color:rgba(255,255,255,0.6); margin:0 auto; padding:5%; width: 90%; max-width: 1000px; border-radius:10px;">
 
-        <div style="width:80%; margin:0 auto;">
+        <div style="width:80%; margin:0 auto;" id="assignment_div">
 
             <label>{{ notice.title }}</label>
             <hr />
@@ -22,7 +22,7 @@
             </div>
 
             <label>첨부파일</label>
-            <input id="file" name="file" class="btn btn-default" style="margin-bottom:5px" type="file" />
+            <input type="file" id="file" name="file" class="btn btn-default" style="margin-bottom:5px"/>
 
 
         </div>
@@ -33,6 +33,20 @@
 
         </div>
         </form>
+
+        <script type="text/javascript">
+       window.onload = function() {
+            {% if assignment.file is not None %}
+                var reload_file = document.createElement("a")
+                reload_file.text="{{  assignment.file }}"
+                reload_file.href = "{{  assignment.file }}"
+                reload_file.download = "{{  assignment.file }}"
+                var div = document.getElementById("assignment_div")
+                div.appendChild(reload_file)
+            {% endif %}
+
+        }
+        </script>
 
 {% endblock %}
 

@@ -15,10 +15,10 @@ class LectureInfo(models.Model):
     final_score = models.IntegerField(default= 0)
 
 class Team(models.Model):
-    classroom = models.ForeignKey(Lecture, on_delete=models.CASCADE),
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE),
     name = models.CharField(max_length=100)
     leader = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True),
-    members = models.ManyToManyField(Student)
+    members = models.ManyToManyField(Student, related_name="team_members")
 
 class LectureNotice(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)

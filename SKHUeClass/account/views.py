@@ -4,6 +4,9 @@ from django.views.decorators.csrf import csrf_protect
 from .models import *
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from libraries.libuser import user_check
+from lecture.models import Lecture
+from django.contrib.contenttypes.models import ContentType
 
 def main(request):
     if request.method == "GET":
@@ -62,6 +65,13 @@ def join(request):
                     base_user = bu
                 )
                 prof.save()
+                content_type = ContentType.objects.get_for_model(Lecture)
+                permission = auth.models.Permission.objects.get(
+                    codename='add_lecture',
+                    content_type=content_type,
+                )
+                bu.user_permissions.add(permission)
+                bu.save
 
             return redirect('/login')
 
@@ -70,12 +80,17 @@ def join(request):
 @login_required
 def userinfo(request):
     if request.method == "GET":
-        return render(request, 'myPage.html', {'info': {'username':request.user.username,
-                                                        'name':request.user.get_full_name(),
-                                                        'department': request.user.department,
-                                                        'grade': request.user.student.grade,
-                                                        'phonenum': request.user.phone,
-                                                        'email': request.user.email}})
+        user = user_check(request)
+        info = {'username': request.user.username,
+         'name': request.user.get_full_name(),
+         'department': request.user.department,
+         'phonenum': request.user.phone,
+         'email': request.user.email}
+
+        if type(user) is Student:
+            info['grade'] = user.grade
+
+        return render(request, 'myPage.html', {'info': info})
 
     if request.method == "POST":
 
