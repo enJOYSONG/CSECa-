@@ -1,10 +1,9 @@
-from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment
+from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from account.models import BaseUser
-from libraries.libuser import user_check
+from account.models import BaseUser, Student
 
 @login_required
 def main(request):
@@ -31,8 +30,13 @@ def main(request):
 @login_required
 def my_lecture_list(request):
     if request.method == "GET":
-        user = user_check(request)
-        lectures = user.lecture_set.all()
+        try:
+            request.user.student
+        except ObjectDoesNotExist:
+            lectures = Lecture.objects.filter(professor=request.user.professor).all()
+            return render(request, 'lectureList.html', {'lectures': lectures})
+
+        lectures = request.user.student.lecture_set.all()
 
         return render(request, 'lectureList.html', {'lectures': lectures})
 
@@ -53,6 +57,7 @@ def my_lecture_list(request):
 def lecture_detail(request, lecture_id):
     if request.method == "GET":
         lecture = get_object_or_404(Lecture, id=lecture_id)
+
         return render(request, 'myLecture.html', {'lecture': lecture})
 
 @login_required
@@ -130,3 +135,65 @@ def commentWrite(request, question_id):
 
         comment.save()
         return redirect('questionView', question_id)
+
+@login_required
+def assignmentSubmit(request, notice_id):
+    if request.method == "GET":
+        notice = LectureNotice.objects.get(id=notice_id)
+        student = Student.objects.get(base_user=request.user)
+        if notice.assignment_set.filter(student=student):
+            assignment = notice.assignment_set.get(student=student)
+            return render(request, 'assignmentSubmit.html', {'notice': notice, 'assignment': assignment})
+        return render(request, 'assignmentSubmit.html', {'notice': notice})
+    if request.method == "POST":
+        notice = LectureNotice.objects.get(id=notice_id)
+        student = Student.objects.get(base_user=request.user)
+
+        if notice.assignment_set.filter(student=student):
+            assignment = notice.assignment_set.get(student=student)
+            assignment.description = request.POST['description']
+            assignment.file = request.POST['file']
+        else:
+            assignment = Assignment()
+            assignment.notice = notice
+            assignment.student = student
+            assignment.description = request.POST['description']
+            assignment.file = request.POST['file']
+
+        assignment.save()
+        return redirect('lecture_detail', notice.lecture_id)
+
+@login_required
+def assignmentList(request, lecture_id):
+    if request.method == "GET":
+        lecture = Lecture.objects.get(id=lecture_id)
+        notices = lecture.lecturenotice_set.filter(is_assignment=True)
+        return render(request, "assignmentList.html", {'lecture':lecture, 'notices': notices})
+
+@login_required
+def assignmentCheck(request, notice_id):
+    if request.method == "GET":
+        notice = LectureNotice.objects.get(id=notice_id)
+        assignments = notice.assignment_set.all()
+        return render(request, "assignmentCheck.html", {'assignments': assignments})
+
+@login_required
+def assignmentPoint(request, assignment_id):
+    if request.method == "POST":
+        assignment = Assignment.objects.get(id=assignment_id)
+        assignment.point = request.POST['point']
+        assignment.comment = request.POST['comment']
+
+        assignment.save()
+        return redirect('assignmentCheck',assignment.notice_id)
+
+
+@login_required
+def studentList(request, lecture_id):
+    if request.method == "GET":
+        lecture = Lecture.objects.get(id=lecture_id)
+        students = lecture.students.all()
+
+        return render(request, 'studentList.html', {'students': students})
+
+    # if request.method=="POST":

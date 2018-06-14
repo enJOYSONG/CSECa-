@@ -33,3 +33,11 @@ class QuestionComment(models.Model):
     person = models.ForeignKey(BaseUser, on_delete=models.SET_NULL, null=True)
     comment = models.TextField(max_length=1000, null=False)
     content_at = models.DateTimeField(default=timezone.now)
+
+class Assignment(models.Model):
+    notice = models.ForeignKey(LectureNotice, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    description = models.TextField(max_length=500, null=True)
+    file = models.FileField(null=True)
+    point = models.IntegerField(null=True)
+    comment = models.CharField(max_length=100, null=True)
