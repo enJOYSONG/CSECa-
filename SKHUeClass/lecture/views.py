@@ -37,7 +37,8 @@ def my_lecture_list(request):
         if type(user) is Student:
             lectures = Lecture.objects.filter(id__in=LectureInfo.objects.filter(student=user).values('lecture_id'))
 
-        lectures = Lecture.objects.filter(professor=user)
+        else:
+            lectures = Lecture.objects.filter(professor=user)
 
         return render(request, 'lectureList.html', {'lectures': lectures})
 
