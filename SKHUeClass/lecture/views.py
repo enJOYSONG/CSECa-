@@ -1,9 +1,10 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser
+from libraries.libuser import user_check
 
 @login_required
 def main(request):
@@ -30,13 +31,8 @@ def main(request):
 @login_required
 def my_lecture_list(request):
     if request.method == "GET":
-        try:
-            request.user.student
-        except ObjectDoesNotExist:
-            lectures = Lecture.objects.filter(professor=request.user.professor).all()
-            return render(request, 'lectureList.html', {'lectures': lectures})
-
-        lectures = request.user.student.lecture_set.all()
+        user = user_check(request)
+        lectures = user.lecture_set.all()
 
         return render(request, 'lectureList.html', {'lectures': lectures})
 
