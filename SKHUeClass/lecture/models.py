@@ -6,8 +6,19 @@ from django.utils import timezone
 class Lecture(models.Model):
     name = models.CharField(max_length=100)
     professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, null=True)
-    students = models.ManyToManyField(Student)
     ta = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name="ta_student")
+
+class LectureInfo(models.Model):
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    mid_score = models.IntegerField(default= 0)
+    final_score = models.IntegerField(default= 0)
+
+class Team(models.Model):
+    classroom = models.ForeignKey(Lecture, on_delete=models.CASCADE),
+    name = models.CharField(max_length=100)
+    leader = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True),
+    members = models.ManyToManyField(Student)
 
 class LectureNotice(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)

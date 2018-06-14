@@ -1,24 +1,26 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment
+from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment, LectureInfo
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser, Student
+from django.db.models import Case, When,Value, CharField,F
+from libraries.libuser import user_check
 
 @login_required
 def main(request):
     if request.method == "GET":
-        try:
-            request.user.professor
-        except ObjectDoesNotExist:
+        user = user_check(request)
+
+        if type(user) is Student:
             return redirect('my_lecture_list')
 
         return render(request, 'lectureCreate.html')
 
     if request.method == "POST":
-        try:
-            request.user.professor
-        except ObjectDoesNotExist:
+        user = user_check(request)
+
+        if type(user) is Student:
             return redirect('my_lecture_list')
 
 
@@ -30,35 +32,54 @@ def main(request):
 @login_required
 def my_lecture_list(request):
     if request.method == "GET":
-        try:
-            request.user.student
-        except ObjectDoesNotExist:
-            lectures = Lecture.objects.filter(professor=request.user.professor).all()
-            return render(request, 'lectureList.html', {'lectures': lectures})
+        user = user_check(request)
 
-        lectures = request.user.student.lecture_set.all()
+        if type(user) is Student:
+            lectures = Lecture.objects.filter(id__in=LectureInfo.objects.filter(student=user).values('lecture_id'))
+
+        else:
+            lectures = Lecture.objects.filter(professor=user)
 
         return render(request, 'lectureList.html', {'lectures': lectures})
 
     if request.method == "POST":
-        try:
-            request.user.student
-        except ObjectDoesNotExist:
+        user = user_check(request)
+
+        if type(user) is Student:
             return redirect('my_lecture_list')
 
         lecture_id = request.POST['h1']
         lecture = Lecture.objects.get(id=lecture_id)
 
-        lecture.students.add(request.user.student)
+        if LectureInfo.objects.filter(lecture=lecture, student=request.user.student).exists() == False:
+            lecture_info = LectureInfo(lecture=lecture, student=request.user.student)
+            lecture_info.save()
+
 
         return redirect('my_lecture_list')
 
 @login_required
 def lecture_detail(request, lecture_id):
     if request.method == "GET":
-        lecture = get_object_or_404(Lecture, id=lecture_id)
+        user = user_check(request)
+        lecture = get_object_or_404(Lecture.objects.prefetch_related('lecturenotice_set', 'lecturequestion_set'), id=lecture_id)
 
-        return render(request, 'myLecture.html', {'lecture': lecture})
+        if type(user) is Student:
+            notice_list = lecture.lecturenotice_set.annotate(is_done=Case(When(assignment__student=user, then=Value("Y")), default=Value("N"),output_field=CharField()),
+                                                             point=Case(When(assignment__student=user,
+                                                                               then='assignment__point'), default=Value(""),
+                                                                          output_field=CharField())
+
+                                                             ).order_by('lecturenotice__id')
+
+
+
+        else:
+            notice_list = lecture.lecturenotice_set.order_by('-id')
+
+
+        question_list = lecture.lecturequestion_set.order_by('-id')
+        return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list})
 
 @login_required
 def lecture_list(request):

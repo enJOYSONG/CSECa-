@@ -37,7 +37,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {%  for notice in lecture.lecturenotice_set.all %}
+                    {%  for notice in notice_list.all %}
                         <tr>
                                 <td>{{  notice.id }}</td>
                                 <td> {% if notice.is_notice == 1 %}<span class="glyphicon glyphicon-bell"></span>{% endif%}</td>
@@ -46,25 +46,12 @@
                                     <span class="glyphicon glyphicon-floppy-disk"></span></a>{% endif%}</td>
                                 <td>
                                 {% if notice.is_assignment == 1 %}
-                                    {% for assignment in request.user.student.assignment_set.all  %}
-                                        {% if assignment.notice == notice %}
-                                        Y
-                                        {% endif %}
-                                    {% endfor %}
+                                    {{ notice.is_done }}
                                 {% endif %}
                                 </td>
                                 <td>
                                     {% if notice.is_assignment == 1 %}
-                                    {% for assignment in request.user.student.assignment_set.all  %}
-                                        {% if assignment.notice == notice %}
-                                            {% if assignment.point is None %}
-                                                점수 미입력
-                                                {% else %}
-                                            {{ assignment.point }}
-                                                {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-
+                                        {{ notice.point }}
                                     {% endif %}
                                 </td>
                                 <td>
@@ -72,7 +59,7 @@
                                     {% for assignment in request.user.student.assignment_set.all  %}
                                         {% if assignment.notice == notice %}
                                             {% if assignment.comment is not None %}
-                                                <a><span class="glyphicon glyphicon-comment" title="{{ assignment.comment }}"></span>
+                                                <a><span class="glyphicon glyphicon-comment" title="{{ assignment.comment }}"></span></a>
                                                 {% endif %}
                                         {% endif %}
                                     {% endfor %}
@@ -104,7 +91,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        {%  for question in lecture.lecturequestion_set.all %}
+                        {%  for question in question_list %}
                             <tr>
                                 <td>{{ question.id }}</td>
                                 <td><a href="{% url 'questionView' question_id=question.id %}">{{ question.title }}</a></td>
