@@ -1,0 +1,119 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
+        <h4>학생리스트</h4>
+        <h3>{{ lecture.name }}</h3>
+
+    </div>
+    <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
+        <div class="table-responsive">
+
+            <table id="studentTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>학번 <span class="glyphicon glyphicon-chevron-up" onclick="sortTD(0)"></span>
+                            <span class="glyphicon glyphicon-chevron-down" onclick="reverseTD(0)"></span></th>
+                        <th>이름 <span class="glyphicon glyphicon-chevron-up" onclick="sortTD(1)"></span>
+                            <span class="glyphicon glyphicon-chevron-down" onclick="reverseTD(1)"></span></th>
+                        <th>학년 <span class="glyphicon glyphicon-chevron-up" onclick="sortTD(2)"></span>
+                            <span class="glyphicon glyphicon-chevron-down" onclick="reverseTD(2)"></span></th>
+                        <th>학과 <span class="glyphicon glyphicon-chevron-up" onclick="sortTD(3)"></span>
+                            <span class="glyphicon glyphicon-chevron-down" onclick="reverseTD(3)"></span></th>
+                        <th>과제점수 <span class="glyphicon glyphicon-chevron-up" onclick="sortTD(4)"></span>
+                            <span class="glyphicon glyphicon-chevron-down" onclick="reverseTD(4)"></span></th>
+                        <th style="width:15%">중간점수</th>
+                        <th style="width:15%">기말점수</th>
+                        <th>TA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                 {% for student in students %}
+
+                <tr>
+                    <td>{{ student.base_user.get_username}}</td>
+                    <td>{{ student.base_user.get_full_name }}</td>
+                    <td>{{ student.grade}}</td>
+                    <td>{{ student.base_user.department}}</td>
+
+                    <td>{{ student.assignment }}</td><!-------과제 점수 오또케 가져오지..? ----->
+                    <td>
+                        <input class="form-control" style="height:100%" />
+                    </td>
+                    <td>
+                        <input class="form-control" style="height:100%" />
+                    </td>
+                    <td>
+                        <input type="radio" name="isTA" onclick="authorizeTA()"/>
+                    </td>
+                </tr>
+                 {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <div style="width:100%; margin:0 auto;">
+            <ul class="pagination" >
+                <li class="active"><a herf="#">1</a></li>
+                <li><a herf="#">2</a></li>
+                <li><a herf="#">3</a></li>
+                <li><a herf="#">4</a></li>
+                <li><a herf="#">5</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="input-group" style="width: 30%;">
+                <div class="input-group-btn search-panel">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span id="search_concept">필터</span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">학번</a></li>
+                        <li><a href="#">이름</a></li>
+                        <li><a href="#">학년</a></li>
+                        <li><a href="#">학과</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="search_param" value="all" id="search_param">
+                <input type="text" class="form-control" name="x" placeholder="Search Bar">
+                <span class="input-group-btn"><button class="btn btn-primary" type="button">검색</button></span>
+            </div>
+            <button type="submit" class="btn btn-primary pull-right" style="margin-top:-35px">변경 내용 저장</button>
+        </div>
+    </div>
+
+        <script type="text/javascript">
+            // TA 선택 확인창
+            function authorizeTA(){
+                if(confirm("OOO 학생을 TA로 임명하시겠습니까?")==true){
+                    //확인
+                }
+                else{
+                    return; // 취소
+                }
+            }
+        </script>
+        <script type="text/javascript">
+            // Sort
+            var myTable = document.getElementById( "studentTable" );
+            var replace = replacement( myTable );
+            function sortTD( index ){    replace.ascending( index );    }
+            function reverseTD( index ){    replace.descending( index );    }
+        </script>
+
+        <script>
+            // 검색 필터 반영하는 JS
+            $(document).ready(function (e) {
+                $('.search-panel .dropdown-menu').find('a').click(function (e) {
+                    e.preventDefault();
+                    var param = $(this).attr("href").replace("#", "");
+                    var concept = $(this).text();
+                    $('.search-panel span#search_concept').text(concept);
+                    $('.input-group #search_param').val(param);
+                });
+            });
+        </script>
+
+{% endblock %}
