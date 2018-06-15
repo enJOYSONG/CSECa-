@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required,permission_required
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment, LectureInfo
+from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment, LectureInfo, Team
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser, Student
@@ -8,6 +8,7 @@ from django.db.models import Case, When,Value, CharField,F
 from libraries.libuser import user_check
 from django.conf import settings
 from django.core.files.storage import default_storage
+from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 
@@ -75,7 +76,8 @@ def lecture_detail(request, lecture_id):
 
 
         question_list = lecture.lecturequestion_set.order_by('-id')
-        return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list})
+        team_list = lecture.team_set.order_by('name')
+        return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list, 'team_list':team_list})
 
 @login_required
 def lecture_list(request):
@@ -217,3 +219,31 @@ def studentList(request, lecture_id):
         return render(request, 'studentList.html', {'students': students})
 
     # if request.method=="POST":
+
+@login_required
+def teamMake(request, lecture_id):
+    if request.method == "GET":
+        lecture = Lecture.objects.get(id=lecture_id)
+        #if lecture in request.user.student.team_members:
+        #    messages.info(request, '이미 속한 팀이 있습니다.')
+        if Team.objects.filter(lecture=lecture, leader=request.user.student).exists():
+            messages.info(request, '이미 만든 팀이 있습니다.')
+        else:
+            team = Team()
+            team.lecture = lecture
+            team.name = request.user.get_full_name() + "팀"
+            team.leader = request.user.student
+            team.save()
+
+        return redirect('lecture_detail', lecture_id)
+
+@login_required
+def teamEnter(request, team_id):
+    if request.method == "GET":
+        team = Team.objects.get(id=team_id)
+        if Team.objects.filter(lecture=team.lecture, leader=request.user.student).exists():
+            messages.info(request, '이미 만든 팀이 있습니다.')
+        else:
+            team.members.add(request.user.student)
+
+        return redirect('lecture_detail', team.lecture_id)

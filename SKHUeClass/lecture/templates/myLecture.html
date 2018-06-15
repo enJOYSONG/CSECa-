@@ -112,55 +112,33 @@
                 <!-- 세번째 탭 -->
                 <div class="tab-pane fade active in" id="third">
                     <div>
+                        {% if messages %}
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" style="color:red" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    {% endif %}
+                        {% for team in team_list %}
                         <div class="col-xs-12 col-sm-4 col-lg-3">
                             <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
 
                                 <div class="panel-heading">
-                                    길진혁조
-                                    <button class="btn btn-default btn-xs pull-right" onclick="enterTeam();">
+                                    {{ team.name }}
+                                    <button class="btn btn-default btn-xs pull-right" onclick="enterTeam('{% url 'teamEnter' team_id=team.id %}','{{ team.name }}');">
                                         <span class="glyphicon glyphicon-log-in"></span>
                                     </button>
                                 </div>
                                 <div class="panel-body">
-                                    저찌구<br />
-                                    어ㅉ구
+                                    {% for member in team.members.all %}
+                                        {{ member.base_user.get_full_name }}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4 col-lg-3">
-                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
-
-                                <div class="panel-heading">
-                                    김진솔조
-                                    <button class="btn btn-default btn-xs pull-right">
-                                        <span class="glyphicon glyphicon-log-in"></span>
-                                    </button>
-                                </div>
-                                <div class="panel-body">
-                                    저찌구<br />
-                                    어ㅉ구
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-4 col-lg-3">
-                            <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
-
-                                <div class="panel-heading">
-                                    송승희조
-                                    <button class="btn btn-default btn-xs pull-right">
-                                        <span class="glyphicon glyphicon-log-in"></span>
-                                    </button>
-                                </div>
-                                <div class="panel-body">
-                                    저찌구<br />
-                                    어ㅉ구
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                         <div class="col-xs-12 col-sm-4 col-lg-3">
                             <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
                                 <div class="panel-body">
-                                    <button class="btn btn-default" style="width:100%; height:100%; border:0; outline: 0; background-color:rgba(255,255,255,0);">
+                                    <button onclick="makeTeam()" class="btn btn-default" style="width:100%; height:100%; border:0; outline: 0; background-color:rgba(255,255,255,0);">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </button>
                                 </div>
@@ -198,9 +176,17 @@ $(function () {
 
 <script type="text/javascript">
 // 팀합류 확인창
-    function enterTeam(){
-        if(confirm("OOO팀에 들어가시겠습니까?")==true){
-            //확인
+    function enterTeam(url, name){
+        if(confirm(name+"에 들어가시겠습니까?")==true){
+            location.href=url ;
+        }
+        else{
+            return; // 취소
+        }
+    }
+    function makeTeam(){
+        if(confirm("팀을 새로 만드시겠습니까?")==true){
+            location.href="{% url 'teamMake' lecture_id=lecture.id %}";
         }
         else{
             return; // 취소
@@ -208,11 +194,7 @@ $(function () {
     }
 </script>
 
-        <script>
-        function commentView() {
-            
-        }
-        </script>
+
             {% endblock %}
 
 

@@ -14,9 +14,10 @@
             <label>첨부파일</label>
             <input id="file" name="file" class="btn btn-default" style="width:100%" type="file" /></br>
             <label>제출기한</label>
-            <input id="limited_date" name="limited_date" class="form-control" type="datetime-local" />
+            <div id="dateDiv" class="form-group">
+                        </div>
             <input id="is_notice" name="is_notice" type="checkbox" value="1">공지</input></br>
-            <input id="is_assignment" name="is_assignment" type="checkbox" value="1">과제</input></br>
+            <input id="is_assignment" name="is_assignment" type="checkbox" value="1" onclick="createDateField('dateDiv')">과제</input></br>
 
            </br>
           <button class="btn btn-primary pull-right" type="submit" formaction={% url 'noticeWrite' lecture_id=lecture_id%}>작성</button>
@@ -27,4 +28,24 @@
 
 </div>
 
+<script type="text/javascript">
+    function createDateField(addDiv){
+        var parentDiv = document.getElementById(addDiv);
+        if(document.getElementById('is_assignment').checked){
+            var dateInput = document.createElement('input');
+            dateInput.setAttribute('id','limited_date');
+            dateInput.setAttribute('name','limited_date');
+            dateInput.setAttribute('class', "form-control");
+            dateInput.type = "datetime-local";
+
+
+
+            parentDiv.appendChild(dateInput);
+        }
+        else{
+            parentDiv.removeChild(document.getElementById('limited_date'));
+        }
+    }
+
+</script>
 {% endblock %}
