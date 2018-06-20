@@ -12,14 +12,14 @@
             <nav id="menu" data-toggle="offcanvas" data-target=".navmenu">
                 <span class="fa fa-bars"></span>
             </nav>
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="lecture_tab_li">
                 <li class="active"><a href="#first" >강의자료</a></li>
                 <li><a href="#second" >QnA</a></li>
                 <li><a href="#third" >조편성</a></li>
-                <li><a href="#fourth" >관리자</a></li>
+
             </ul>
 
-            <div class="tab-content">
+            <div class="tab-content" id="lecture_tab">
                 <!-- 첫번째 탭 -->
                 <div class="tab-pane fade active in" id="first">
                 </br>
@@ -70,9 +70,7 @@
                     </tbody>
                 </table>
 
-                <div style="float:right">
-                    <a href="{% url 'noticeWrite' lecture_id=lecture.id%}"><button class="btn btn-primary">작성</button></a>
-                </div>
+
 
             </div>
 
@@ -111,19 +109,15 @@
                 <br>
                 <!-- 세번째 탭 -->
                 <div class="tab-pane fade active in" id="third">
-                    <div>
-                        {% if messages %}
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}" style="color:red" {% endif %}>{{ message }}</li>
-        {% endfor %}
-    {% endif %}
+                    <div id = "message_div">
+
                         {% for team in team_list %}
                         <div class="col-xs-12 col-sm-4 col-lg-3">
                             <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
 
                                 <div class="panel-heading">
                                     {{ team.name }}
-                                    <button class="btn btn-default btn-xs pull-right" onclick="enterTeam('{% url 'teamEnter' team_id=team.id %}','{{ team.name }}');">
+                                    <button class="btn btn-default btn-xs pull-right" onclick="enterTeam('{% url 'team' lecture_or_team_id=team.id %}','{{ team.name }}');">
                                         <span class="glyphicon glyphicon-log-in"></span>
                                     </button>
                                 </div>
@@ -138,7 +132,7 @@
                         <div class="col-xs-12 col-sm-4 col-lg-3">
                             <div class="panel panel-default" style="background-color:rgba(255,255,255,0.5); margin:5px">
                                 <div class="panel-body">
-                                    <button onclick="makeTeam()" class="btn btn-default" style="width:100%; height:100%; border:0; outline: 0; background-color:rgba(255,255,255,0);">
+                                    <button class="btn btn-default" style="width:100%; height:100%; border:0; outline: 0; background-color:rgba(255,255,255,0);" onclick="makeTeam()">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </button>
                                 </div>
@@ -150,48 +144,70 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="fourth">
-                <br>
-                <!-- 네번째 탭 -->
-                <div class="tab-pane fade active in" id="fourth">
-                    <a href="{% url 'studentList' lecture_id=lecture.id%}">학생 리스트 보기</a></br>
-                    <a href="lectureList.html">시험 성적 공지</a></br>
-                    <a href="{% url 'assignmentList' lecture_id=lecture.id %}">과제 확인</a>
 
-                </div>
-            </div>
         </div>
     </div>
 
 
 <script>
 // 관리자 페이지 Tab 바뀌는 JS
-$(function () {
-    $('ul.nav-tabs a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    });
-});
+// navbar.html에
 </script>
 
 <script type="text/javascript">
 // 팀합류 확인창
     function enterTeam(url, name){
+
         if(confirm(name+"에 들어가시겠습니까?")==true){
-            location.href=url ;
+            $.ajax({
+                type: "PUT",
+                url: url,
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                headers:{"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (data) {
+                if (data.status === 200) {
+                    alert("조에 들어갔습니다.")
+                    location.href = data.redirect_url;
+
+                } else if (data.status === 300) {
+                    alert("이미 만들거나 들어간 팀이 있습니다.")
+                }
+                else {
+                    alert('오류');
+                }
+            }
+            });
         }
         else{
             return; // 취소
         }
     }
+
+
+
+
     function makeTeam(){
-        if(confirm("팀을 새로 만드시겠습니까?")==true){
-            location.href="{% url 'teamMake' lecture_id=lecture.id %}";
-        }
-        else{
-            return; // 취소
-        }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'team' lecture_or_team_id=lecture.id %}",
+            data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            headers:{"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (data) {
+                if (data.status === 200) {
+                    alert("조가 만들어졌습니다.")
+                    location.href = data.redirect_url;
+
+                } else if (data.status === 300) {
+                    alert("이미 만들거나 들어간 팀이 있습니다.")
+                }
+                else {
+                    alert('오류');
+                }
+             }
+        })
     }
+
+
 </script>
 
 

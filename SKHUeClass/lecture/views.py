@@ -4,11 +4,12 @@ from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, As
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser, Student
-from django.db.models import Case, When,Value, CharField,F
+from django.db.models import Case, When,Value, CharField,F,Q
 from libraries.libuser import user_check
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.contrib import messages
+from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 
@@ -16,7 +17,6 @@ from django.contrib.auth.models import Permission
 @permission_required('lecture.add_lecture', raise_exception=True)
 def main(request):
     if request.method == "GET":
-        user = user_check(request)
 
         return render(request, 'lectureCreate.html')
 
@@ -33,12 +33,14 @@ def main(request):
 def my_lecture_list(request):
     if request.method == "GET":
         user = user_check(request)
-
+        lectures = None
+        is_permissioned = False
         if type(user) is Student:
             lectures = Lecture.objects.filter(id__in=LectureInfo.objects.filter(student=user).values('lecture_id'))
 
         else:
             lectures = Lecture.objects.filter(professor=user)
+            is_permissioned = True
 
         return render(request, 'lectureList.html', {'lectures': lectures})
 
@@ -59,6 +61,7 @@ def my_lecture_list(request):
 def lecture_detail(request, lecture_id):
     if request.method == "GET":
         user = user_check(request)
+        is_permissioned = False
         lecture = get_object_or_404(Lecture.objects.prefetch_related('lecturenotice_set', 'lecturequestion_set'), id=lecture_id)
 
         if type(user) is Student:
@@ -69,15 +72,24 @@ def lecture_detail(request, lecture_id):
 
                                                              ).order_by('-id')
 
+            if lecture.ta == user:
+                is_permissioned = True
+
 
 
         else:
             notice_list = lecture.lecturenotice_set.order_by('-id')
 
+            if lecture.professor == user:
+                is_permissioned = True
+
 
         question_list = lecture.lecturequestion_set.order_by('-id')
         team_list = lecture.team_set.order_by('name')
-        return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list, 'team_list':team_list})
+
+
+        return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list, \
+                                                  'team_list':team_list, 'is_permissioned':is_permissioned})
 
 @login_required
 def lecture_list(request):
@@ -221,13 +233,13 @@ def studentList(request, lecture_id):
     # if request.method=="POST":
 
 @login_required
-def teamMake(request, lecture_id):
-    if request.method == "GET":
-        lecture = Lecture.objects.get(id=lecture_id)
-        #if lecture in request.user.student.team_members:
-        #    messages.info(request, '이미 속한 팀이 있습니다.')
-        if Team.objects.filter(lecture=lecture, leader=request.user.student).exists():
-            messages.info(request, '이미 만든 팀이 있습니다.')
+def team(request, lecture_or_team_id):
+    if request.method == "POST":
+        lecture = get_object_or_404(Lecture, id=lecture_or_team_id)
+        if Team.objects.filter(Q(lecture=lecture, leader=request.user.student) | \
+                               Q(lecture=lecture, members=request.user.student)).exists():
+            return JsonResponse({'status': 300}, safe=False)
+
         else:
             team = Team()
             team.lecture = lecture
@@ -235,15 +247,16 @@ def teamMake(request, lecture_id):
             team.leader = request.user.student
             team.save()
 
-        return redirect('lecture_detail', lecture_id)
+        #return redirect('lecture_detail', lecture_id)
+        return JsonResponse({'status': 200, 'redirect_url':  lecture_or_team_id}, safe=False)
 
-@login_required
-def teamEnter(request, team_id):
-    if request.method == "GET":
-        team = Team.objects.get(id=team_id)
-        if Team.objects.filter(lecture=team.lecture, leader=request.user.student).exists():
-            messages.info(request, '이미 만든 팀이 있습니다.')
+    if request.method == "PUT":
+        team = get_object_or_404(Team, id=lecture_or_team_id)
+        if Team.objects.filter(Q(lecture=team.lecture, leader=request.user.student)|
+                               Q(lecture=team.lecture, members=request.user.student)).exists():
+            return JsonResponse({'status': 300}, safe=False)
         else:
             team.members.add(request.user.student)
 
-        return redirect('lecture_detail', team.lecture_id)
+        return JsonResponse({'status': 200, 'redirect_url':  team.lecture.id}, safe=False)
+

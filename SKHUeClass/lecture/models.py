@@ -14,12 +14,6 @@ class LectureInfo(models.Model):
     mid_score = models.IntegerField(default= 0)
     final_score = models.IntegerField(default= 0)
 
-class Team(models.Model):
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE),
-    name = models.CharField(max_length=100)
-    leader = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True),
-    members = models.ManyToManyField(Student, related_name="team_members")
-
 class LectureNotice(models.Model):
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
     title = models.CharField(max_length=100,null=False)
@@ -52,3 +46,9 @@ class Assignment(models.Model):
     file = models.FileField(null=True)
     point = models.IntegerField(null=True)
     comment = models.CharField(max_length=100, null=True)
+
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    members = models.ManyToManyField(Student, related_name="team_members")
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    leader = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)

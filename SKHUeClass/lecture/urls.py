@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'^assignmentCheck/(?P<notice_id>[0-9]+)$', assignmentCheck, name='assignmentCheck'),
     url(r'^assignmentPoint/(?P<assignment_id>[0-9]+)$', assignmentPoint, name='assignmentPoint'),
     url(r'^studentList/(?P<lecture_id>[0-9]+)$',studentList, name='studentList'),
-    url(r'^teamMake/(?P<lecture_id>[0-9]+)$', teamMake, name='teamMake'),
-    url(r'^teamEnter/(?P<team_id>[0-9]+)$', teamEnter, name='teamEnter'),
+    url(r'^team/(?P<lecture_or_team_id>[0-9]+)$', team, name='team'),
 
 ]

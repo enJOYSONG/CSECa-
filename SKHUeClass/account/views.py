@@ -8,6 +8,7 @@ from libraries.libuser import user_check
 from lecture.models import Lecture
 from django.contrib.contenttypes.models import ContentType
 
+
 def main(request):
     if request.method == "GET":
         return render(request, 'login.html')
@@ -15,7 +16,11 @@ def main(request):
 @csrf_protect
 def login(request):
     if request.method == "GET":
-        return render(request, 'login.html')
+        if request.user.is_authenticated:
+            return redirect('my_lecture_list')
+        else:
+            return render(request, 'login.html')
+
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
