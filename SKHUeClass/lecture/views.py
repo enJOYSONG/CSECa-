@@ -6,7 +6,7 @@ from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, As
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser, Student
-from django.db.models import Case, When,Value, CharField,F,Q,Sum
+from django.db.models import Case, When,Value, CharField,F,Q,Sum,IntegerField
 from libraries.libuser import user_check
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -67,10 +67,8 @@ def lecture_detail(request, lecture_id):
         lecture = get_object_or_404(Lecture.objects.prefetch_related('lecturenotice_set', 'lecturequestion_set'), id=lecture_id)
 
         if type(user) is Student:
-            notice_list = lecture.lecturenotice_set.annotate(is_done=Case(When(assignment__student=user, then=Value("Y")), default=Value("N"),output_field=CharField()),
-                                                             point=Case(When(assignment__student=user,
-                                                                               then='assignment__point'), default=Value(""),
-                                                                          output_field=CharField())
+            notice_list = lecture.lecturenotice_set.annotate(is_done=Sum(Case(When(assignment__student=user, then=1), default=0,output_field=IntegerField()), then=True),
+                                                             point=Sum(Case(When(assignment__student=user,then='assignment__point'), default=Value(""), output_field=IntegerField()), then=True),
 
                                                              ).order_by('-id')
 
@@ -265,11 +263,22 @@ def studentList(request, lecture_id):
     if request.method == "GET":
         lecture = Lecture.objects.get(id=lecture_id)
         info = LectureInfo.objects.filter(lecture=lecture)
-        student_list = Assignment.objects.filter(notice__lecture=lecture).values('student_id').annotate(username=F('student__base_user__username'),
-                                                                                                        fullname=F('student__base_user__first_name'),
-                                                                                                        grade=F('student__grade'),
-                                                                                                        department=F('student__base_user__department'),
-                                                                                                        total_point=Sum('point'))
+        student_list = Assignment.objects.filter(notice__lecture=lecture).annotate(username=F('student__base_user__username'),
+                                                                                    firstname=F('student__base_user__first_name'),
+                                                                                    lastname=F('student__base_user__last_name'),
+                                                                                    grade=F('student__grade'),
+                                                                                    department=F('student__base_user__department'),
+                                                                                    total_point=Sum('point'),
+                                                                                   midscore=Sum(Case(When(
+                                                                                       student__lectureinfo__lecture=lecture,
+                                                                                       then='student__lectureinfo__mid_score'), default=0,
+                                                                                                     output_field=IntegerField())),
+                                                                                   finalscore=Sum(Case(When(
+                                                                                       student__lectureinfo__lecture=lecture,
+                                                                                       then='student__lectureinfo__final_score'),
+                                                                                       default=0,
+                                                                                       output_field=IntegerField()))
+                                                                                   )
 
         return render(request, 'studentList.html', {'student_list':student_list})
 

@@ -46,7 +46,11 @@
                                     <span class="glyphicon glyphicon-floppy-disk"></span></a>{% endif%}</td>
                                 <td>
                                 {% if notice.is_assignment == 1 %}
-                                    {{ notice.is_done }}
+                                    {% if notice.is_done == 1 %}
+                                        Y
+                                        {% else %}
+                                            N
+                                        {% endif %}
                                 {% endif %}
                                 </td>
                                 <td>

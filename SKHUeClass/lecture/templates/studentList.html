@@ -34,16 +34,16 @@
 
                 <tr>
                     <td>{{ student.username}}</td>
-                    <td>{{ student.fullname }}</td>
+                    <td>{{ student.firstname }}{{ student.lastname }}</td>
                     <td>{{ student.grade}}</td>
                     <td>{{ student.department}}</td>
 
                     <td>{{ student.total_point }}</td><!-------과제 점수 오또케 가져오지..? ----->
                     <td>
-                        <input class="form-control" style="height:100%" />
+                        <input class="form-control" style="height:100%" value="{{ student.midscore}}"/>
                     </td>
                     <td>
-                        <input class="form-control" style="height:100%" />
+                        <input class="form-control" style="height:100%" value="{{ student.finalscore}}"/>
                     </td>
                     <td>
                         <input type="radio" name="isTA" onclick="authorizeTA()"/>
