@@ -17,13 +17,24 @@
     <div style="margin-top:50px">
         {{ notice.content }}
     </div>
-    <div style="margin-top:50px">
-        <a href="myLecture.html">< 목록으로</a>
-        <a class="pull-right">삭제</a>
-        <a class="pull-right" style="margin-right:5px">수정</a>
-    </div>
+
+        {% if notice.file is not None %}
+            <a href="{{ notice.file }}" download="{{ notice.file }}"></a>
+        {% endif %}
+
+        {% if notice.is_assignment %}
+            <br/>
+            <label>제출기한</label>
+            {{ notice.limited_date }}
+        {% endif %}
+    <div id="notice_footer" style="margin-top:50px">
+        <a href="{% url 'lecture_detail' lecture_id=notice.lecture_id %}">< 목록으로</a>
+        <a class="pull-right" type="submit" href="{% url 'noticeDelete' notice_id=notice.id %}">삭제</a>
+        <a class="pull-right" style="margin-right:5px" href="{% url 'noticeModify' notice_id=notice.id %}">수정</a>
 
 
     </div>
 
+
+    </div>
 {% endblock %}

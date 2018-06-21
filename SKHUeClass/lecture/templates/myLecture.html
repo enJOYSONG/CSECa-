@@ -124,6 +124,7 @@
                                 <div class="panel-body">
                                     {% for member in team.members.all %}
                                         {{ member.base_user.get_full_name }}
+                                        <br/>
                                     {% endfor %}
                                 </div>
                             </div>

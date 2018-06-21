@@ -22,9 +22,9 @@
                     {% for notice in notices %}
                         <tr>
                             <td>
-                                <a href="{% url 'assignmentCheck' notice_id=notice.id %}">{{ notice.title }}</a>
+                                <a href="{% url 'assignment' notice_or_assignment_id=notice.id %}">{{ notice.title }}</a>
                             </td>
-                            <td> 카운트 </td>
+                            <td> {{ notice.assignment_set.count }} / {{ lecture.lectureinfo_set.count }} </td>
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -4,11 +4,14 @@
 
 <form method="post">
         {% csrf_token %}
-    <div class="container" >
+    <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 800px; ">
+        <h4>강의추가</h4>
 
-        <div  style="background-color: rgba(255,255,255,0.3); margin: 100px auto; width: 100%; padding:5%; border-radius:10px;">
-            <h3>강의 추가</h3><br />
-            <label>강의 이름</label>
+    </div>
+    <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 800px; padding:5%; border-radius:10px;">
+        <label>교수명</label>
+        <input class="form-control" placeholder="{{ request.user.get_full_name }}" disabled/><br/>
+        <label>강의 이름</label>
             <input id="lecture_name" name ="lecture_name" class="form-control"/></br>
 
         </br>
