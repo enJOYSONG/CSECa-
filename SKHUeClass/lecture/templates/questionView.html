@@ -21,9 +21,10 @@
         {{ question.content }}
     </div>
     <div style="margin-top:50px">
-        <a href="myLecture.html">< 목록으로</a>
-        <a class="pull-right">삭제</a>
-        <a class="pull-right" style="margin-right:5px">수정</a>
+        <a href="{% url 'lecture_detail' lecture_id=question.lecture_id %}">< 목록으로</a>
+        {% if question.person == request.user %}
+        <a class="pull-right" href="{% url 'questionDelete' question_id=question.id %}">삭제</a>
+        {% endif %}
     </div>
     <hr />
 
@@ -32,6 +33,9 @@
     <div style="margin-top:20px">
             {{ comment.person.get_full_name }}
             {{ comment.content_at }}
+        {% if comment.person == request.user %}
+            <a href="{% url 'commentWrite' question_id=comment.id %}">x</a>
+        {% endif %}
             <br/>
             {{ comment.comment }}
             <br/>

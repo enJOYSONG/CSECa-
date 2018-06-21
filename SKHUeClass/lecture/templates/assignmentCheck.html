@@ -4,12 +4,13 @@
 
     <div style="margin:0px auto; margin-top: 100px; width:90%; max-width: 1000px; ">
         <h4>과제 검사</h4>
+        <h3>- {{ notice.title }}</h3>
     </div>
 
     <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
 
 
-        <label style="color:red">201535006 학생과 201435035 학생의 제출파일이 같습니다.</label>
+        <!--<label style="color:red">201535006 학생과 201435035 학생의 제출파일이 같습니다.</label>-->
 
 
         <div class="table-responsive">
@@ -39,8 +40,6 @@
                 </thead>
                 <tbody>
                 {% for assignment in assignments %}
-                    <form method="post">
-                        {% csrf_token %}
                     <tr>
 
                         <td>
@@ -50,23 +49,46 @@
                             {{ assignment.student.base_user.get_full_name }}
                         </td>
                         <td>
-                            <a href="assignmentSubmit.html"><span class="glyphicon glyphicon-file"></span></a>
+                            <a href={{ assignment.file }} download="{{ assignment.file }}"><span class="glyphicon glyphicon-file"></span></a>
                         </td>
                         <td>
-                            <input id="point" name="point" class="form-control" style="height:100%" type="number" placeholder="{{ assignment.point }}" value="{{ assignment.point }}"/>
+                            <input id="point{{ assignment.id }}" name="point{{ assignment.id }}" class="form-control" style="height:100%" type="number" placeholder="{{ assignment.point }}" value="{{ assignment.point }}"/>
                         </td>
                         <td>
-                            <input id="comment" name="comment" class="form-control" style="height:100%" placeholder="{{ assignment.comment }}" value="{{ assignment.comment }}"/>
+                            <input id="comment{{ assignment.id }}" name="comment{{ assignment.id }}" class="form-control" style="height:100%" placeholder="{{ assignment.comment }}" value="{{ assignment.comment }}"/>
                         </td>
                         <td>
-                            <button class="btn btn-default" formaction="{% url 'assignmentPoint' assignment_id=assignment.id %}">저장</button>
+                            <button type="submit" class="btn btn-default" onclick="setPoint({{ assignment.id }})" >저장</button>
                         </td>
                     </tr>
-                    </form>
                 {% endfor %}
                 </tbody>
             </table>
 
         </div>
     </div>
+
+        <script type="text/javascript">
+        //점수입력 ajax 처리
+        function setPoint(id) {
+            $.ajax({
+                type: "POST",
+                url: id,
+                data: {'point': $("#point"+id).val() , 'comment':$("#comment"+id).val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                headers:{"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (data) {
+                if (data.status === 200) {
+                    alert("저장되었습니다.")
+                    location.href = data.redirect_url;
+
+                } else if (data.status === 300) {
+                    alert("저장에 실패했습니다.")
+                }
+                else {
+                    alert('오류');
+                }
+                }
+            })
+        }
+        </script>
 {% endblock %}

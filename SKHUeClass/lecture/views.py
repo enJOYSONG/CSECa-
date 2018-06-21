@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.decorators import login_required,permission_required
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, Assignment, LectureInfo, Team
@@ -112,7 +114,8 @@ def noticeWrite(request, lecture_id):
         lecNotice.file = request.POST['file']
         lecNotice.is_notice = request.POST.get('is_notice', False)
         lecNotice.is_assignment = request.POST.get('is_assignment', False)
-        lecNotice.limited_date = request.POST['limited_date']
+        if lecNotice.is_assignment:
+            lecNotice.limited_date = request.POST['limited_date']
         #lecNotice.content_at = django.utils.timezone.now()
         lecNotice.updated_at = timezone.now()
 
@@ -121,10 +124,35 @@ def noticeWrite(request, lecture_id):
         return redirect('lecture_detail', lecture_id)
 
 @login_required
+def noticeModify(request, notice_id):
+    if request.method == "GET":
+        notice = get_object_or_404(LectureNotice, id=notice_id)
+        return render(request, 'noticeModify.html', {'notice': notice})
+    if request.method == "POST":
+        notice = get_object_or_404(LectureNotice, id=notice_id)
+        notice.title = request.POST['title']
+        notice.content = request.POST['content']
+        notice.file = request.POST['file']
+        notice.is_notice = request.POST.get('is_notice', False)
+        notice.is_assignment = request.POST.get('is_assignment', False)
+        notice.limited_date = request.POST['limited_date']
+        notice.updated_at = timezone.now()
+
+        notice.save()
+        return redirect('noticeView', notice_id)
+
+@login_required
 def noticeView(request, notice_id):
     if request.method == "GET":
         notice = get_object_or_404(LectureNotice, id=notice_id)
         return render(request, 'noticeView.html', {'notice': notice})
+
+@login_required
+def noticeDelete(request, notice_id):
+    if request.method == "GET":
+        notice = get_object_or_404(LectureNotice, id=notice_id)
+        notice.delete()
+        return redirect('lecture_detail', notice.lecture_id)
 
 @login_required
 def questionWrite(request, lecture_id):
@@ -154,7 +182,19 @@ def questionView(request, question_id):
         return render(request, 'questionView.html', {'question': question,'comments': comments})
 
 @login_required
+def questionDelete(request, question_id):
+    if request.method == "GET":
+        question = get_object_or_404(LectureQuestion, id=question_id)
+        question.delete()
+        return redirect('lecture_detail', question.lecture_id)
+
+@login_required
 def commentWrite(request, question_id):
+    if request.method == "GET":
+        comment = get_object_or_404(QuestionComment, id = question_id)
+        comment.delete();
+        return redirect('questionView', comment.question_id)
+
     if request.method == "POST":
         question = LectureQuestion.objects.get(id=question_id)
         user = BaseUser.objects.get(id=request.user.id)
@@ -202,24 +242,22 @@ def assignmentList(request, lecture_id):
     if request.method == "GET":
         lecture = Lecture.objects.get(id=lecture_id)
         notices = lecture.lecturenotice_set.filter(is_assignment=True)
-        return render(request, "assignmentList.html", {'lecture':lecture, 'notices': notices})
+        return render(request, "assignmentList.html", {'lecture': lecture, 'notices': notices})
 
 @login_required
-def assignmentCheck(request, notice_id):
+def assignment(request, notice_or_assignment_id):
     if request.method == "GET":
-        notice = LectureNotice.objects.get(id=notice_id)
+        notice = LectureNotice.objects.get(id=notice_or_assignment_id)
         assignments = notice.assignment_set.all()
-        return render(request, "assignmentCheck.html", {'assignments': assignments})
-
-@login_required
-def assignmentPoint(request, assignment_id):
+        return render(request, "assignmentCheck.html", {'assignments': assignments, 'notice': notice})
     if request.method == "POST":
-        assignment = Assignment.objects.get(id=assignment_id)
+        assignment = get_object_or_404(Assignment, id=notice_or_assignment_id)
         assignment.point = request.POST['point']
         assignment.comment = request.POST['comment']
 
         assignment.save()
-        return redirect('assignmentCheck',assignment.notice_id)
+        #return redirect('assignmentCheck', assignment.notice_id)
+        return JsonResponse({'status': 200, 'redirect_url':  assignment.notice_id}, safe=False)
 
 
 @login_required

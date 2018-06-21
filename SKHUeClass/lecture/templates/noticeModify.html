@@ -1,0 +1,83 @@
+{% extends "templates/navbar.html" %}
+
+    {% block content %}
+
+<script type="text/javascript">
+//스크립트 호출을 위해 맨 위에 정의해줌
+    function createDateField(addDiv){
+        var parentDiv = document.getElementById(addDiv);
+        if(document.getElementById('is_assignment').checked){
+            var dateInput = document.createElement('input');
+            dateInput.setAttribute('id','limited_date');
+            dateInput.setAttribute('name','limited_date');
+            dateInput.setAttribute('class', "form-control");
+            dateInput.type = "datetime-local";
+
+            dateInput.value = "2018-06-12T19:30";
+            //dateInput.value = date.toISOString();
+
+            parentDiv.appendChild(dateInput);
+        }
+        else{
+            parentDiv.removeChild(document.getElementById('limited_date'));
+        }
+    }
+
+</script>
+
+    <div class="container" >
+        <form method="post">
+            {% csrf_token %}
+        <div  style="background-color: rgba(255,255,255,0.3); margin: 100px auto; width: 100%; padding:5%; border-radius:10px;">
+            <h3>글 수정</h3><br />
+            <label>제목</label>
+            <input id="title" name="title" class="form-control" value="{{ notice.title }}"/></br>
+            <label>내용</label>
+            <textarea id= "content" name="content" rows="15" class="form-control">{{ notice.content }}</textarea></br>
+            <label>첨부파일</label>
+            <input id="file" name="file" class="btn btn-default" style="width:100%" type="file" /></br>
+            <div id="file_div"></div>
+            <label>제출기한</label>
+            <div id="dateDiv" class="form-group">
+                        </div>
+
+            {% if notice.is_notice %}
+            <input id="is_notice" name="is_notice" type="checkbox" value="1" checked>공지</input></br>
+            {% else %}
+            <input id="is_notice" name="is_notice" type="checkbox" value="1">공지</input></br>
+            {% endif %}
+
+            {% if notice.is_assignment %}
+            <input id="is_assignment" name="is_assignment" type="checkbox" value="1" onclick="createDateField('dateDiv')" checked>과제</input></br>
+            <script> createDateField('dateDiv'); </script>
+            {% else %}
+            <input id="is_assignment" name="is_assignment" type="checkbox" value="1" onclick="createDateField('dateDiv')">과제</input></br>
+            {% endif %}
+
+
+           </br>
+          <button class="btn btn-primary pull-right" type="submit" formaction={% url 'noticeModify' notice_id=notice.id%}>작성</button>
+          <button class="btn btn-default pull-right" style="margin-right:5px">취소</button>
+         <br />
+        </div>
+            </form>
+
+</div>
+
+        <script>
+        window.onload = function() {
+            {% if notice.file is not None %}
+                var reload_file = document.createElement("a")
+                reload_file.text="{{  notice.file }}"
+                reload_file.href = "{{  notice.file }}"
+                reload_file.download = "{{  notice.file }}"
+                var div = document.getElementById("file_div")
+                div.appendChild(reload_file)
+            {% endif %}
+
+        }
+
+        </script>
+
+
+{% endblock %}
