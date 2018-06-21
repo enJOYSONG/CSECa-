@@ -7,11 +7,14 @@ from django.contrib.auth.decorators import login_required
 from libraries.libuser import user_check
 from lecture.models import Lecture
 from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse
+from urllib.parse import parse_qsl
+from json import loads,dumps
 
 
 def main(request):
     if request.method == "GET":
-        return render(request, 'login.html')
+        return redirect('login')
 
 @csrf_protect
 def login(request):
@@ -22,16 +25,14 @@ def login(request):
             return render(request, 'login.html')
 
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = auth.authenticate(username=username, password=password, request=request)
+        json_data = loads(request.POST['post_data'])
+        user = auth.authenticate(username=json_data.get('username'), password=json_data.get('password'), request=request)
 
         if user is not None and user.is_active:
             auth.login(request, user)
-            return redirect('/lecture/my_lecture_list')
+            return JsonResponse({'status': 200, 'redirect_url':'/lecture/my_lecture_list'}, safe=False)
         else:
-            return redirect('/login')
+            return JsonResponse({'status': 400}, safe=False)
 
 
 
@@ -41,28 +42,30 @@ def join(request):
            return render(request, 'join.html')
 
     if request.method == "POST":
-        if BaseUser.objects.filter(username=request.POST['id']).exists() :
-            return redirect('/join')
+        list = dict(parse_qsl(request.POST['post_data']))
+
+        if BaseUser.objects.filter(username=list.get('id')).exists() :
+            return JsonResponse({'status': 400}, safe=False)
 
         else:
             bu = BaseUser.objects.create_user(
-                username=request.POST['id'],
-                password=request.POST['password'],
-                email = request.POST['email'],
-                first_name = request.POST['first_name'],
-                last_name = request.POST['last_name'],
-                department = request.POST['department'],
-                phone = request.POST['phone']
+                username=list.get('id'),
+                password=list.get('password'),
+                email = list.get('email'),
+                first_name = list.get('first_name'),
+                last_name = list.get('last_name'),
+                department = list.get('department'),
+                phone = list.get('phone')
             )
 
             bu.save()
 
-            job = request.POST['job']
+            job = list.get('job')
 
             if(job == "학생"):
                 std = Student(
                     base_user = bu,
-                    grade = request.POST['grade']
+                    grade = list.get('grade')
                 )
                 std.save()
             else:
@@ -78,7 +81,7 @@ def join(request):
                 bu.user_permissions.add(permission)
                 bu.save
 
-            return redirect('/login')
+            return JsonResponse({'status': 200, 'redirect_url': '/login'}, safe=False)
 
 
 
@@ -94,24 +97,30 @@ def userinfo(request):
 
         if type(user) is Student:
             info['grade'] = user.grade
+            info['job'] = "학생"
+        else:
+            info['job'] = "교수"
 
         return render(request, 'myPage.html', {'info': info})
 
     if request.method == "POST":
+        user = user_check(request)
+        list = dict(parse_qsl(request.POST['post_data']))
+        request.user.email = list.get('email')
+        request.user.department = list.get('department')
+        request.user.phone =list.get('phone')
+        if type(user) is Student:
+            request.user.student.grade = list.get('grade')
 
-        request.user.email = request.POST['email']
-        request.user.department = request.POST['department']
-        request.user.phone = request.POST['phone']
-        request.user.student.grade = request.POST['grade']
+        request.user.save()
 
-        if request.POST['password'] == '':
-            request.user.student.save()
+        if list.get('password') is None:
             request.user.save()
-            return redirect('/mypage')
+            return JsonResponse({'status': 200}, safe=False)
         else:
-            request.user.set_password(request.POST['password'])
+            request.user.set_password(list.get('password'))
             request.user.save()
-            return redirect('/login')
+            return JsonResponse({'status': 202, 'redirect_url': '/login'}, safe=False)
 
 
 @login_required

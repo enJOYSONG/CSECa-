@@ -4,7 +4,7 @@ from .models import Lecture, LectureNotice, LectureQuestion, QuestionComment, As
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from account.models import BaseUser, Student
-from django.db.models import Case, When,Value, CharField,F,Q
+from django.db.models import Case, When,Value, CharField,F,Q,Sum
 from libraries.libuser import user_check
 from django.conf import settings
 from django.core.files.storage import default_storage
@@ -226,9 +226,14 @@ def assignmentPoint(request, assignment_id):
 def studentList(request, lecture_id):
     if request.method == "GET":
         lecture = Lecture.objects.get(id=lecture_id)
-        students = lecture.students.all()
+        info = LectureInfo.objects.filter(lecture=lecture)
+        student_list = Assignment.objects.filter(notice__lecture=lecture).values('student_id').annotate(username=F('student__base_user__username'),
+                                                                                                        fullname=F('student__base_user__first_name'),
+                                                                                                        grade=F('student__grade'),
+                                                                                                        department=F('student__base_user__department'),
+                                                                                                        total_point=Sum('point'))
 
-        return render(request, 'studentList.html', {'students': students})
+        return render(request, 'studentList.html', {'student_list':student_list})
 
     # if request.method=="POST":
 

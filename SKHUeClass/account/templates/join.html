@@ -21,7 +21,7 @@
 
     </div>
 
-    <form method="post">
+    <form method="post" id="join_form">
         {% csrf_token %}
 <div class="vertical-center">
 
@@ -99,7 +99,7 @@
 
             <div class="panel-footer">
                 <!--확인 및 취소-->
-                <button type="submit" class="btn btn-primary pull-right" formaction="/join">확인</button>
+                <button type="button" class="btn btn-primary pull-right" onclick="join()">확인</button>
                 <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
                 <div class="clearfix"></div>
             </div>
@@ -113,3 +113,30 @@
 
 </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/js_main/jquery.1.11.1.js' %}"></script>
+<script type="text/javascript">
+    function join(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'join' %}",
+            data: {'post_data': $("#join_form").serialize() , 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            headers:{"X-CSRFToken": '{{ csrf_token }}'},
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                if (data.status === 200) {
+                    alert("가입되었습니다")
+                    location.href = data.redirect_url;
+
+                } else if (data.status === 400) {
+                    alert("이미 존재하는 회원입니다.")
+                }
+                else {
+                    alert('오류');
+                }
+             }
+        })
+    }
+
+
+</script>

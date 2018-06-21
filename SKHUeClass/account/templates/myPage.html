@@ -6,7 +6,7 @@
         <h4>내 강의실</h4>
 
     </div>
-    <form method='POST'>
+    <form method='POST' id="mypage_form">
         {% csrf_token %}
     <div class="container" style="background-color:rgba(255,255,255,0.6); margin:0 auto; padding:5%; width: 90%; max-width: 1000px; border-radius:10px;">
 
@@ -30,8 +30,11 @@
         <div class="form-group">
             <label>직업</label>
             <select id="job" name="job" class="form-control" disabled>
-                <option>학생</option>
-                <option>교수</option>
+                {% if info.job == "학생" %}
+                    <option>학생</option>
+                {% elif info.job == "교수"%}
+                    <option>교수</option>
+                {% endif %}
             </select>
         </div>
 
@@ -127,13 +130,37 @@
         <br />
 
             <!--확인 및 취소-->
-            <button type="submit" class="btn btn-primary pull-right" formaction="/account/mypage">확인</button>
+            <button type="button" class="btn btn-primary pull-right" onclick="updateinfo()">확인</button>
             <button type="submit" class="btn btn-secondary pull-right" style="margin-right:5px" formaction="/lecture/my_lecture_list" formmethod="get">취소</button>
 
        </div>
     </div>
-    </form>>
+    </form>
+<script type="text/javascript">
+    function updateinfo(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'mypage' %}",
+            data: {'post_data': $("#mypage_form").serialize() , 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            headers:{"X-CSRFToken": '{{ csrf_token }}'},
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data) {
+                if (data.status === 200) {
+                    alert("정보가 수정되었습니다.")
 
+                } else if (data.status === 202) {
+                    alert("비밀번호가 수정되었습니다. 다시 로그인하세요.")
+                    location.href = data.redirect_url;
+                }
+                else {
+                    alert('오류');
+                }
+             }
+        })
+    }
+
+
+</script>
 {% endblock %}
 
 

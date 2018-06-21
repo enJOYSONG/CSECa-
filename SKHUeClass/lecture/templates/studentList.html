@@ -30,15 +30,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                 {% for student in students %}
+                 {% for student in student_list %}
 
                 <tr>
-                    <td>{{ student.base_user.get_username}}</td>
-                    <td>{{ student.base_user.get_full_name }}</td>
+                    <td>{{ student.username}}</td>
+                    <td>{{ student.fullname }}</td>
                     <td>{{ student.grade}}</td>
-                    <td>{{ student.base_user.department}}</td>
+                    <td>{{ student.department}}</td>
 
-                    <td>{{ student.assignment }}</td><!-------과제 점수 오또케 가져오지..? ----->
+                    <td>{{ student.total_point }}</td><!-------과제 점수 오또케 가져오지..? ----->
                     <td>
                         <input class="form-control" style="height:100%" />
                     </td>
