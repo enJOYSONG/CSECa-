@@ -10,6 +10,7 @@
 
     </div>
     <div class="container" style="background-color: rgba(255,255,255,0.6); margin: 0px auto; width:90%; max-width: 1000px; padding:5%; border-radius:10px;">
+    <form action="POST" id="manage_student_form">
         <div class="table-responsive">
 
             <table id="studentTable" class="table table-hover">
@@ -30,24 +31,24 @@
                         <th>TA</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="t_body">
                  {% for student in student_list %}
 
                 <tr>
-                    <td>{{ student.username}}</td>
-                    <td>{{ student.firstname }}{{ student.lastname }}</td>
+                    <td>{{ student.base_user.username}}</td>
+                    <td>{{ student.base_user.first_name }}{{ student.base_user.last_name }}</td>
                     <td>{{ student.grade}}</td>
-                    <td>{{ student.department}}</td>
+                    <td>{{ student.base_user.department}}</td>
 
                     <td>{{ student.total_point }}</td><!-------과제 점수 오또케 가져오지..? ----->
                     <td>
-                        <input class="form-control" style="height:100%" value="{{ student.midscore}}"/>
+                        <input type="text" class="form-control"  style="height:100%" value="{{ student.midscore}}"/>
                     </td>
                     <td>
-                        <input class="form-control" style="height:100%" value="{{ student.finalscore}}"/>
+                        <input type="text" class="form-control" style="height:100%" value="{{ student.finalscore}}"/>
                     </td>
                     <td>
-                        <input type="radio" name="isTA" onclick="authorizeTA()"/>
+                        <input type="radio" name="isTA" onclick="authorizeTA()" {% if lecture.ta == student %} checked {% endif %}/>
                     </td>
                 </tr>
                  {% endfor %}
@@ -81,8 +82,9 @@
                 <input type="text" class="form-control" name="x" placeholder="Search Bar">
                 <span class="input-group-btn"><button class="btn btn-primary" type="button">검색</button></span>
             </div>
-            <button type="submit" class="btn btn-primary pull-right" style="margin-top:-35px">변경 내용 저장</button>
+            <button type="button" class="btn btn-primary pull-right" style="margin-top:-35px" onclick="manage_student()">변경 내용 저장</button>
         </div>
+    </form>
     </div>
 
         <script type="text/javascript" src="{% static '/js_main/sort.js' %}"></script>
@@ -116,6 +118,38 @@
                     $('.input-group #search_param').val(param);
                 });
             });
+            function manage_student(){
+                data = []
+                var tb = $("#t_body>tr")
+                tb.each(function(i,val){
+                    tds = $(val).children()
+                    console.log(tds)
+                    new_data = {
+                        'username': tds.eq(0).text(),
+                        'midscore': tds.eq(5).find('input[type="text"]').val(),
+                        'finscore': tds.eq(6).find('input[type="text"]').val(),
+                        'ista': tds.eq(7).find('input[type="radio"]').is(':checked')
+                    }
+                    console.log(new_data)
+                    data.push(new_data)
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'studentList' lecture_id=lecture.id%}",
+                    data: {'post_data': JSON.stringify(data), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    headers:{"X-CSRFToken": '{{ csrf_token }}'},
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        if (data.status === 200) {
+                            alert("수정 완료")
+
+                        }
+                        else {
+                            alert('오류');
+                        }
+                     }
+                })
+            }
         </script>
 
 {% endblock %}

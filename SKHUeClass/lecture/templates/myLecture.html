@@ -14,7 +14,7 @@
             </nav>
             <ul class="nav nav-tabs" id="lecture_tab_li">
                 <li class="active"><a href="#first" >강의자료</a></li>
-                <li><a href="#second" >QnA</a></li>
+                <li id="2"><a href="#second">QnA</a></li>
                 <li><a href="#third" >조편성</a></li>
 
             </ul>
@@ -39,7 +39,7 @@
                     <tbody>
                     {%  for notice in notice_list.all %}
                         <tr>
-                                <td>{{  notice.id }}</td>
+                                <td>{{ forloop.revcounter }} </td>
                                 <td> {% if notice.is_notice == 1 %}<span class="glyphicon glyphicon-bell"></span>{% endif%}</td>
                                 <td><a href="{% url 'noticeView' notice_id=notice.id %}">{{  notice.title }}</a></td>
                                 <td> {% if notice.is_assignment == 1 %} <a href="{% url 'assignmentSubmit' notice_id=notice.id %}">
@@ -95,7 +95,7 @@
                         <tbody>
                         {%  for question in question_list %}
                             <tr>
-                                <td>{{ question.id }}</td>
+                                <td>{{ forloop.revcounter }}</td>
                                 <td><a href="{% url 'questionView' question_id=question.id %}">{{ question.title }}</a></td>
                                 <td>{{ question.person.get_full_name }}</td>
                                 <td>{{ question.content_at }}</td>
@@ -126,8 +126,15 @@
                                     </button>
                                 </div>
                                 <div class="panel-body">
+                                    {{ team.leader.base_user.get_full_name }}<br/>
                                     {% for member in team.members.all %}
                                         {{ member.base_user.get_full_name }}
+                                        {% if member.base_user == request.user %}
+                                            <button class="btn btn-default btn-xs pull-right" onclick="leaveTeam('{% url 'team' lecture_or_team_id=team.id %}','{{ team.name }}');">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </button>
+
+                                        {% endif %}
                                         <br/>
                                     {% endfor %}
                                 </div>
@@ -160,6 +167,11 @@
 </script>
 
 <script type="text/javascript">
+$( document ).ready(function() {
+    $('.nav-tabs li:eq({{ tab }}) a').tab('show')
+
+})
+
 // 팀합류 확인창
     function enterTeam(url, name){
 
@@ -188,7 +200,30 @@
         }
     }
 
+    function leaveTeam(url, name){
 
+        if(confirm(name+"을 떠나시겠습니까?")==true){
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                headers:{"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (data) {
+                if (data.status === 200) {
+                    alert("조를 떠났습니다..")
+                    location.href = data.redirect_url;
+
+                }
+                else {
+                    alert('오류');
+                }
+            }
+            });
+        }
+        else{
+            return; // 취소
+        }
+    }
 
 
     function makeTeam(){

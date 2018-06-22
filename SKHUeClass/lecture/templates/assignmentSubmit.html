@@ -29,7 +29,7 @@
 
             <!--확인 및 취소-->
             <button class="btn btn-primary pull-right" formaction={% url 'assignmentSubmit' notice_id=notice.id %}>제출</button></a>
-            <button class="btn btn-secondary pull-right" style="margin-right:5px">취소</button>
+            <button class="btn btn-secondary pull-right" style="margin-right:5px"formmethod="get" formaction={% url 'lecture_detail' lecture_id=notice.lecture.id %}>취소</button>
 
         </div>
         </form>

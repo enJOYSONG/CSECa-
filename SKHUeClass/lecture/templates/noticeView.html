@@ -29,12 +29,20 @@
         {% endif %}
     <div id="notice_footer" style="margin-top:50px">
         <a href="{% url 'lecture_detail' lecture_id=notice.lecture_id %}">< 목록으로</a>
-        <a class="pull-right" type="submit" href="{% url 'noticeDelete' notice_id=notice.id %}">삭제</a>
-        <a class="pull-right" style="margin-right:5px" href="{% url 'noticeModify' notice_id=notice.id %}">수정</a>
 
 
     </div>
 
 
     </div>
+        <script type="text/javascript">
+$( document ).ready(function() {
+    {% if is_permissioned %}
+
+            $("#notice_footer").append("<a class=\"pull-right\" type=\"submit\" href=\"{% url 'noticeDelete' notice_id=notice.id %}\">삭제</a>")
+            $("#notice_footer").append("<a class=\"pull-right\" style=\"margin-right:5px\" href=\"{% url 'noticeModify' notice_id=notice.id %}\">수정</a>")
+    {% endif %}
+});
+</script>
 {% endblock %}
+

@@ -21,8 +21,29 @@
 
 
     </br>
-    <button class="btn btn-primary pull-right" type="submit" formaction={% url 'questionWrite' lecture_id=lecture_id %}>작성</button>
+    <button class="btn btn-primary pull-right" type="button" onclick="question_write()">작성</button>
     <button class="btn btn-default pull-right" style="margin-right:5px">취소</button>
 </div>
  </form>
+        <script type="text/javascript">
+             function question_write(){
+        $.ajax({
+            type: "POST",
+            url: "{% url 'questionWrite' lecture_id=lecture_id %}",
+            data: {'content':$("#content").val(), 'title':$("#title").val(), 'file':$("#file").val(), 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            headers:{"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (data) {
+                if (data.status === 200) {
+                    alert("질문을 작성했습니다.")
+                    location.href = data.redirect_url;
+
+                }
+                else {
+                    alert('오류');
+                }
+             }
+        })
+    }
+
+        </script>
 {% endblock %}

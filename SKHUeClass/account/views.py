@@ -16,7 +16,6 @@ def main(request):
     if request.method == "GET":
         return redirect('login')
 
-@csrf_protect
 def login(request):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -36,7 +35,6 @@ def login(request):
 
 
 
-@csrf_protect
 def join(request):
     if request.method == "GET":
            return render(request, 'join.html')

@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
+from json import loads
 
 @login_required
 @permission_required('lecture.add_lecture', raise_exception=True)
@@ -44,7 +45,7 @@ def my_lecture_list(request):
             lectures = Lecture.objects.filter(professor=user)
             is_permissioned = True
 
-        return render(request, 'lectureList.html', {'lectures': lectures})
+        return render(request, 'lectureList.html', {'lectures': lectures, 'lecture':lectures.first(),'is_permissioned':is_permissioned})
 
     if request.method == "POST":
         user = user_check(request)
@@ -69,7 +70,6 @@ def lecture_detail(request, lecture_id):
         if type(user) is Student:
             notice_list = lecture.lecturenotice_set.annotate(is_done=Sum(Case(When(assignment__student=user, then=1), default=0,output_field=IntegerField()), then=True),
                                                              point=Sum(Case(When(assignment__student=user,then='assignment__point'), default=Value(""), output_field=IntegerField()), then=True),
-
                                                              ).order_by('-id')
 
             if lecture.ta == user:
@@ -87,9 +87,12 @@ def lecture_detail(request, lecture_id):
         question_list = lecture.lecturequestion_set.order_by('-id')
         team_list = lecture.team_set.order_by('name')
 
-
+        if 'tab' not in request.GET:
+            tab = 0
+        else:
+            tab = request.GET['tab']
         return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list, \
-                                                  'team_list':team_list, 'is_permissioned':is_permissioned})
+                                                  'team_list':team_list, 'is_permissioned':is_permissioned, 'tab':tab})
 
 @login_required
 def lecture_list(request):
@@ -142,8 +145,12 @@ def noticeModify(request, notice_id):
 @login_required
 def noticeView(request, notice_id):
     if request.method == "GET":
+        user = user_check(request)
         notice = get_object_or_404(LectureNotice, id=notice_id)
-        return render(request, 'noticeView.html', {'notice': notice})
+        is_permissioned = False
+        if notice.lecture.professor == user:
+            is_permissioned = True
+        return render(request, 'noticeView.html', {'lecture': notice.lecture, 'notice': notice, 'is_permissioned':is_permissioned})
 
 @login_required
 def noticeDelete(request, notice_id):
@@ -170,7 +177,7 @@ def questionWrite(request, lecture_id):
 
 
         lecQuestion.save()
-        return redirect('lecture_detail', lecture_id)
+        return JsonResponse({'status': 200, 'redirect_url':  '../lecture_detail/'+lecture_id+"?tab=1"}, safe=False)
 
 @login_required
 def questionView(request, question_id):
@@ -254,7 +261,6 @@ def assignment(request, notice_or_assignment_id):
         assignment.comment = request.POST['comment']
 
         assignment.save()
-        #return redirect('assignmentCheck', assignment.notice_id)
         return JsonResponse({'status': 200, 'redirect_url':  assignment.notice_id}, safe=False)
 
 
@@ -262,27 +268,36 @@ def assignment(request, notice_or_assignment_id):
 def studentList(request, lecture_id):
     if request.method == "GET":
         lecture = Lecture.objects.get(id=lecture_id)
-        info = LectureInfo.objects.filter(lecture=lecture)
-        student_list = Assignment.objects.filter(notice__lecture=lecture).annotate(username=F('student__base_user__username'),
-                                                                                    firstname=F('student__base_user__first_name'),
-                                                                                    lastname=F('student__base_user__last_name'),
-                                                                                    grade=F('student__grade'),
-                                                                                    department=F('student__base_user__department'),
-                                                                                    total_point=Sum('point'),
-                                                                                   midscore=Sum(Case(When(
-                                                                                       student__lectureinfo__lecture=lecture,
-                                                                                       then='student__lectureinfo__mid_score'), default=0,
-                                                                                                     output_field=IntegerField())),
-                                                                                   finalscore=Sum(Case(When(
-                                                                                       student__lectureinfo__lecture=lecture,
-                                                                                       then='student__lectureinfo__final_score'),
-                                                                                       default=0,
-                                                                                       output_field=IntegerField()))
+        student_values = LectureInfo.objects.filter(lecture=lecture).values('student__id')
+        student_list = Student.objects.filter(id__in=student_values,lectureinfo__lecture=lecture).order_by().annotate(
+                                                                                    total_point=Sum(Case(When(
+                                                                                       assignment__notice__lecture=lecture,
+                                                                                       then='assignment__point'), default=0,
+                                                                                                    output_field=IntegerField())),
+                                                                                    midscore=
+                                                                                        Case(When(lectureinfo__lecture=lecture, then='lectureinfo__mid_score'), default=0,
+                                                                                             output_field=IntegerField()),
+                                                                                    finalscore=Case(When(lectureinfo__lecture=lecture, then='lectureinfo__final_score'), default=0,
+                                                                                             output_field=IntegerField()),
                                                                                    )
 
-        return render(request, 'studentList.html', {'student_list':student_list})
+        return render(request, 'studentList.html', {'lecture': lecture, 'student_list':student_list})
 
-    # if request.method=="POST":
+    if request.method == "POST":
+        lecture = Lecture.objects.get(id=lecture_id)
+        data = loads(request.POST['post_data'])
+        i = 0
+        for li in LectureInfo.objects.filter(lecture=lecture).all():
+            if li.student.base_user.username == data[i].get('username'):
+                li.mid_score = data[i].get('midscore')
+                li.final_score = data[i].get('finscore')
+                if data[i].get('ista') == True:
+                    lecture.ta = li.student
+                    lecture.save()
+                li.save()
+                i = i+1
+        return
+
 
 @login_required
 def team(request, lecture_or_team_id):
@@ -300,7 +315,7 @@ def team(request, lecture_or_team_id):
             team.save()
 
         #return redirect('lecture_detail', lecture_id)
-        return JsonResponse({'status': 200, 'redirect_url':  lecture_or_team_id}, safe=False)
+        return JsonResponse({'status': 200, 'redirect_url':  lecture_or_team_id + "?tab=2"}, safe=False)
 
     if request.method == "PUT":
         team = get_object_or_404(Team, id=lecture_or_team_id)
@@ -310,5 +325,16 @@ def team(request, lecture_or_team_id):
         else:
             team.members.add(request.user.student)
 
-        return JsonResponse({'status': 200, 'redirect_url':  team.lecture.id}, safe=False)
+        return JsonResponse({'status': 200, 'redirect_url':  str(team.lecture.id) + "?tab=2"}, safe=False)
+
+    if request.method == "DELETE":
+        team = get_object_or_404(Team, id=lecture_or_team_id)
+
+        if request.user.student in team.members.all():
+            team.members.remove(request.user.student)
+            return JsonResponse({'status': 200, 'redirect_url':  str(team.lecture.id) + "?tab=2"}, safe=False)
+        else:
+            return JsonResponse({'status': 400}, safe=False)
+
+
 
