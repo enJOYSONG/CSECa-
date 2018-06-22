@@ -37,6 +37,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% if  student_point_info.midscore is not None %}
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td>중간고사 점수 </td>
+                            <td> </td>
+                            <td> </td>
+                            <td> {{ student_point_info.midscore }}</td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td> </td>
+                            <td> </td>
+                            <td>기말고사 점수 </td>
+                            <td> </td>
+                            <td> </td>
+                            <td>{{ student_point_info.finalscore }} </td>
+                            <td> </td>
+                        </tr>
+                    {% endif %}
                     {%  for notice in notice_list.all %}
                         <tr>
                                 <td>{{ forloop.revcounter }} </td>

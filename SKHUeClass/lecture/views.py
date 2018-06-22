@@ -91,8 +91,24 @@ def lecture_detail(request, lecture_id):
             tab = 0
         else:
             tab = request.GET['tab']
+
+        student_point_info = None
+
+        if type(user) is Student:
+            student_point_info = Student.objects.filter(id=request.user.student.id, lectureinfo__lecture=lecture).order_by().annotate(
+                    total_point=Sum(Case(When(
+                        assignment__notice__lecture=lecture,
+                        then='assignment__point'), default=0,
+                        output_field=IntegerField())),
+                    midscore=
+                    Case(When(lectureinfo__lecture=lecture, then='lectureinfo__mid_score'), default=0,
+                         output_field=IntegerField()),
+                    finalscore=Case(When(lectureinfo__lecture=lecture, then='lectureinfo__final_score'), default=0,
+                                    output_field=IntegerField()),
+                ).first()
+
         return render(request, 'myLecture.html', {'lecture': lecture, 'notice_list': notice_list, 'question_list': question_list, \
-                                                  'team_list':team_list, 'is_permissioned':is_permissioned, 'tab':tab})
+                                                  'team_list':team_list, 'is_permissioned':is_permissioned, 'tab':tab, 'student_point_info':student_point_info})
 
 @login_required
 def lecture_list(request):
@@ -224,12 +240,15 @@ def assignmentSubmit(request, notice_id):
     if request.method == "POST":
         notice = LectureNotice.objects.get(id=notice_id)
         student = Student.objects.get(base_user=request.user)
-        file_url = settings.AWS_CLOUDFRONT_DOMAIN + "/" + request.FILES['file'].name
+        if 'file' in request.GET:
+            file_url = settings.AWS_CLOUDFRONT_DOMAIN + "/" + request.FILES['file'].name
 
         if notice.assignment_set.filter(student=student):
             assignment = notice.assignment_set.get(student=student)
             assignment.description = request.POST['description']
-            assignment.file = file_url
+
+            if 'file' in request.GET:
+                assignment.file = file_url
         else:
             assignment = Assignment()
             assignment.notice = notice
@@ -238,8 +257,8 @@ def assignmentSubmit(request, notice_id):
             assignment.file = file_url
 
         assignment.save()
-
-        default_storage.save(request.FILES['file'].name, request.FILES['file'])
+        if 'file' in request.GET:
+            default_storage.save(request.FILES['file'].name, request.FILES['file'])
         return redirect('lecture_detail', notice.lecture_id)
 
 @login_required
