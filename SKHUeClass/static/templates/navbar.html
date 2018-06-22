@@ -102,7 +102,7 @@
 <script type="text/javascript">
     $( document ).ready(function() {
         {% if is_permissioned %}
-
+            {% if lecture %}
             $("#lecture_tab").append(" <div class=\"tab-pane fade\" id=\"fourth\">\n" +
                 "                <br>\n" +
                 "                <!-- 네번째 탭 -->\n" +
@@ -112,9 +112,11 @@
                 "\n" +
                 "                </div>\n" +
                 "            </div>");
+
             $("#first").append("<div style=\"float:right\">\n" +
                 "                    <a href=\"{% url 'noticeWrite' lecture_id=lecture.id%}\"><button class=\"btn btn-primary\">작성</button></a>\n" +
                 "                </div>");
+            {% endif %}
             $("#lecture_tab_li").append("<li><a href=\"#fourth\" >관리자</a></li>");
             $("#my_lecture_list").prepend("<button class=\"pull-right btn btn-sm\" ><a href=\"{% url 'main' %}\">강의추가</a></button>")
         {% else %}

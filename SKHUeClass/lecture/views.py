@@ -30,7 +30,7 @@ def main(request):
                               professor=user)
         new_lecture.save()
 
-        return redirect('lecture_list')
+        return redirect('my_lecture_list')
 
 @login_required
 def my_lecture_list(request):
@@ -296,7 +296,7 @@ def studentList(request, lecture_id):
                     lecture.save()
                 li.save()
                 i = i+1
-        return
+        return JsonResponse({'status': 200}, safe=False)
 
 
 @login_required

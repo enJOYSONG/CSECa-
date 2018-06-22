@@ -35,17 +35,13 @@
         </form>
 
         <script type="text/javascript">
-       window.onload = function() {
+       $( document ).ready(function() {
             {% if assignment.file is not None %}
-                var reload_file = document.createElement("a")
-                reload_file.text="{{  assignment.file }}"
-                reload_file.href = "{{  assignment.file }}"
-                reload_file.download = "{{  assignment.file }}"
-                var div = document.getElementById("assignment_div")
-                div.appendChild(reload_file)
+                var txt1 = "<a href='{{ assignment.file }}' download='{{ assignment.file }}' class='badge badge-info'>첨부파일 다운로드</a>";
+                $("#assignment_div").append(txt1)
             {% endif %}
 
-        }
+        })
         </script>
 
 {% endblock %}
