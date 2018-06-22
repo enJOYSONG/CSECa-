@@ -240,14 +240,15 @@ def assignmentSubmit(request, notice_id):
     if request.method == "POST":
         notice = LectureNotice.objects.get(id=notice_id)
         student = Student.objects.get(base_user=request.user)
-        if 'file' in request.GET:
+        file_url = None
+        if 'file' in request.FILES:
             file_url = settings.AWS_CLOUDFRONT_DOMAIN + "/" + request.FILES['file'].name
 
         if notice.assignment_set.filter(student=student):
             assignment = notice.assignment_set.get(student=student)
             assignment.description = request.POST['description']
 
-            if 'file' in request.GET:
+            if 'file' in request.FILES:
                 assignment.file = file_url
         else:
             assignment = Assignment()
@@ -257,7 +258,7 @@ def assignmentSubmit(request, notice_id):
             assignment.file = file_url
 
         assignment.save()
-        if 'file' in request.GET:
+        if 'file' in request.FILES:
             default_storage.save(request.FILES['file'].name, request.FILES['file'])
         return redirect('lecture_detail', notice.lecture_id)
 
